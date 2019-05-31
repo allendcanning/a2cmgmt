@@ -152,7 +152,7 @@ def mgmt_handler(event, context):
     if 'action' in user_record:
       if action == "add":
         response = add_cognito_user(user_record)
-        if not response['status']
+        if not response['status']:
           content += "<h3>Unable to add user to cognito pool - "+response['message']+"</h3>"
         else:
           content += '<h3>Successfully added user to cognito pool</h3>\n'
