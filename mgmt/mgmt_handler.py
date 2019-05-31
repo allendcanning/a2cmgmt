@@ -94,7 +94,7 @@ def add_cognito_user(config,record):
         },
         {
             'Name': 'phone',
-            'Value': record['phone']
+            'Value': '+1'+record['phone']
         }
       ]
     )
@@ -153,7 +153,7 @@ def mgmt_handler(event, context):
 
     log_error('user_record = '+str(user_record))
     if 'action' in user_record:
-      if action == "add":
+      if user_record['action'] == 'add':
         response = add_cognito_user(user_record)
         if not response['status']:
           content += "<h3>Unable to add user to cognito pool - "+response['message']+"</h3>"
