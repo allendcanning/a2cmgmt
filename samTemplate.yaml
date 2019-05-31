@@ -22,7 +22,7 @@ Resources:
     Properties:
       Handler: mgmt_handler.mgmt_handler
       CodeUri: ./mgmt/
-      Role: arn:aws:iam::530317771161:role/a2c-role
+      Role: arn:aws:iam::530317771161:role/a2c-mgmt-role
   LoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
