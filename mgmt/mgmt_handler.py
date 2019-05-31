@@ -69,7 +69,7 @@ def start_html(config):
 def print_form():
   content = '<form method="post" action="">'
   content += 'Enter Username: <input type="text" name="username"><p>\n'
-  content += 'Enter Phone: <input type="text" name="phone"><p>\n'
+  content += 'Enter Mobile Phone: <input type="tel" id="phone" name="phone" pattern="[0-9]{3}[0-9]{3}[0-9]{4}"><p>\n'
   content += '<input type="submit" name="Submit">'
   content += '</form>'
 
