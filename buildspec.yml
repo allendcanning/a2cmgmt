@@ -2,6 +2,8 @@
 version: 0.2
 phases:
   install:
+    runtime-versions:
+      python: 3.7
     commands:
       - aws cloudformation package --region us-east-1 --template-file samTemplate.yaml --s3-bucket a2c-src-530317771161 --output-template-file samTemplateOut.yaml
 artifacts:
