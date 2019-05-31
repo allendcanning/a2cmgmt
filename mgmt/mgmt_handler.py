@@ -144,18 +144,23 @@ def mgmt_handler(event, context):
       # Parse the post parameters
       postparams = event['body']
       postparams = base64.b64decode(bytes(postparams,'UTF-8')).decode('utf-8')
+      log_error('Got post params = '+postparams)
       raw_record = urllib.parse.parse_qs(postparams)
       for item in raw_record:
         user_record[item] = raw_record[item][0]
 
     if 'action' in user_record:
-      if action == "Add":
+      if action == "add":
         response = add_cognito_user(user_record)
-        if not response['status']:
+        if not response['status']
           content += "<h3>Unable to add user to cognito pool - "+response['message']+"</h3>"
+        else:
+          content += '<h3>Successfully added user to cognito pool</h3>\n'
         response = add_dynamo_user(user_record)
         if not response['status']:
           content += "<h3>Unable to add user to dynamo db - "+response['message']+"</h3>"
+        else:
+          content += '<h3>Successfully added user to dynamo db</h3>\n'
     else:
       content += print_form()
   else:
