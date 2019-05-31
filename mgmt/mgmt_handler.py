@@ -4,7 +4,7 @@ import re
 import boto3
 #import hmac
 #import hashlib
-#import base64
+import base64
 #from jose import jwk, jwt
 #from jose.utils import base64url_decode
 from boto3.dynamodb.conditions import Key, Attr
@@ -70,6 +70,8 @@ def print_form():
   content = '<form method="post" action="">'
   content += 'Enter Username: <input type="text" name="username"><p>\n'
   content += 'Enter Mobile Phone: <input type="tel" id="phone" name="phone" pattern="[0-9]{3}[0-9]{3}[0-9]{4}"><p>\n'
+  content += 'Enter Email Address: <input type="email" name="email"><p>\n'
+  content += '<input type="hidden" name="action" value="add">\n'
   content += '<input type="submit" name="Submit">'
   content += '</form>'
 
@@ -136,8 +138,17 @@ def mgmt_handler(event, context):
   content = start_html(config)
 
   # Parse form params
+  if 'body' in event:
+    if event['body'] != None:
+      # Parse the post parameters
+      postparams = event['body']
+      postparams = base64.b64decode(bytes(postparams,'UTF-8')).decode('utf-8')
+      raw_record = urllib.parse.parse_qs(postparams)
+      for item in raw_record:
+        user_record[item] = raw_record[item][0]
 
-  if action == "Add":
+  if 'action' in user_record:
+    if action == "Add":
       response = add_cognito_user(user_record)
       if not response['status']:
           content += "<h3>Unable to add user to cognito pool - "+response['message']+"</h3>"
