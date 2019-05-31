@@ -140,7 +140,7 @@ def mgmt_handler(event, context):
 
   # Parse form params
   if 'body' in event:
-    if event['body'] != None:
+    if bool(event['body'] and event['body'].strip()):
       # Parse the post parameters
       postparams = event['body']
       postparams = base64.b64decode(bytes(postparams,'UTF-8')).decode('utf-8')
