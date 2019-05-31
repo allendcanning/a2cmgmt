@@ -93,7 +93,7 @@ def add_cognito_user(config,record):
             'Value': record['email'] 
         },
         {
-            'Name': 'phone',
+            'Name': 'phone number',
             'Value': '+1'+record['phone']
         }
       ]
