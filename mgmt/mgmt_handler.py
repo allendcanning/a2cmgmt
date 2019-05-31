@@ -130,6 +130,7 @@ def mgmt_handler(event, context):
   token = False
   action = "False"
   environment = "dev"
+  user_record = {}
 
   log_error("Event = "+json.dumps(event))
 
