@@ -2,11 +2,11 @@ import json
 import os, time
 import re
 import boto3
-import hmac
-import hashlib
-import base64
-from jose import jwk, jwt
-from jose.utils import base64url_decode
+#import hmac
+#import hashlib
+#import base64
+#from jose import jwk, jwt
+#from jose.utils import base64url_decode
 from boto3.dynamodb.conditions import Key, Attr
 from botocore.exceptions import ClientError
 import urllib.parse
@@ -126,6 +126,7 @@ def add_dynamo_user(record):
 
 def mgmt_handler(event, context):
   token = False
+  action = "False"
   environment = "dev"
 
   log_error("Event = "+json.dumps(event))
