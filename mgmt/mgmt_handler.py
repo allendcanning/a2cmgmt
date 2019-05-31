@@ -40,11 +40,11 @@ def get_config_data(environment):
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   config['cognito_pool'] =response['Parameter']['Value'] 
 
-  ssmpath="/a2c/"+environment+"/cognito_client_id"
+  ssmpath="/a2c/"+environment+"/mgmt_cognito_client_id"
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   config['cognito_client_id'] =response['Parameter']['Value'] 
 
-  ssmpath="/a2c/"+environment+"/cognito_client_secret_hash"
+  ssmpath="/a2c/"+environment+"/mgmt_cognito_client_secret_hash"
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   config['cognito_client_secret_hash'] =response['Parameter']['Value'] 
 
