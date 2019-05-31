@@ -81,6 +81,7 @@ def add_cognito_user(config,record):
   cognito = boto3.client('cognito-idp')
   retval = {}
 
+  log_error('Inside add cognito')
   # Create cognito pool user
   try:
     response = cognito.admin_create_user(
@@ -105,6 +106,7 @@ def add_cognito_user(config,record):
     retval['status'] = False
     retval['message'] = e.response['Error']['Message']
 
+  log_error('retval = '+str(retval))
   return retval
 
 def add_dynamo_user(record):
