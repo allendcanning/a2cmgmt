@@ -147,14 +147,16 @@ def mgmt_handler(event, context):
       for item in raw_record:
         user_record[item] = raw_record[item][0]
 
-  if 'action' in user_record:
-    if action == "Add":
-      response = add_cognito_user(user_record)
-      if not response['status']:
+    if 'action' in user_record:
+      if action == "Add":
+        response = add_cognito_user(user_record)
+        if not response['status']:
           content += "<h3>Unable to add user to cognito pool - "+response['message']+"</h3>"
-      response = add_dynamo_user(user_record)
-      if not response['status']:
+        response = add_dynamo_user(user_record)
+        if not response['status']:
           content += "<h3>Unable to add user to dynamo db - "+response['message']+"</h3>"
+    else:
+      content += print_form()
   else:
     content += print_form()
 
