@@ -149,6 +149,7 @@ def mgmt_handler(event, context):
       for item in raw_record:
         user_record[item] = raw_record[item][0]
 
+    log_error('user_record = '+str(user_record))
     if 'action' in user_record:
       if action == "add":
         response = add_cognito_user(user_record)
