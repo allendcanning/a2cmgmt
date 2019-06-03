@@ -17,7 +17,7 @@ Mappings:
         - "subnet-8c44d6d7"
         - "subnet-be65cf82"
 Resources:
-  theFirmUCognitoPool:
+  theFirmuCognitoPool:
     Type: AWS::Cognito::UserPool
     Properties:
       AdminCreateUserConfig:
@@ -32,7 +32,7 @@ Resources:
       EmailConfiguration:
         EmailSendingAccount: DEVELOPER
         ReplyToEmailAddress: admin@thefirmu.org
-        SourceArn: arn:aws:ses:us-east-1:530317771161:identity/admin@thefirmu.org
+        SourceArn: !Join ['',['arn:aws:ses:',!Ref "AWS::Region",':',!Ref "AWS::AccountId",':identity/admin@thefirmu.org']]
       EmailVerificationMessage: "Your FirmU verification code is {####}. "
       EmailVerificationSubject: "Your FirmU verification code"
       MfaConfiguration: Off
@@ -75,19 +75,19 @@ Resources:
         - String
       GenerateSecret: True
       RefreshTokenValidity: 30
-      UserPoolId: !Ref theFirmUCognitoPool
+      UserPoolId: !Ref theFirmuCognitoPool
   cognitoPoolSSM:
     Type: AWS::SSM::Parameter
     Properties: 
       Name: /a2c/dev/cognito_pool
       Type: String
-      Value: !Ref theFirmUCognitoPool
+      Value: !Ref theFirmuCognitoPool
   cognitoClientIdSSM:
     Type: AWS::SSM::Parameter
     Properties: 
       Name: /a2c/dev/mgmt_cognito_client_id
       Type: String
-      Value: !Ref theFirmUMgmtCognitoClient
+      Value: !Ref theFirmuMgmtCognitoClient
   dynamoDBTableNameSSM:
     Type: AWS::SSM::Parameter
     Properties: 
@@ -104,7 +104,7 @@ Resources:
         -
           Effect: Allow
           Action: ['cognito-idp:AdminInitiateAuth', 'cognito-idp:AdminCreateUser']
-          Resource: !Ref theFirmUCognitoPool
+          Resource: !Ref theFirmuCognitoPool
   mgmtPortalDynamoPolicy:
     Type: AWS::IAM::Policy
     Properties:
