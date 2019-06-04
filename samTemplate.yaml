@@ -22,8 +22,6 @@ Resources:
     Properties:
       AdminCreateUserConfig:
          AllowAdminCreateUserOnly: True
-      AliasAttributes:
-        - email
       AutoVerifiedAttributes:
         - email
       DeviceConfiguration:
@@ -45,10 +43,6 @@ Resources:
           RequireUppercase: True
           TemporaryPasswordValidityDays: 7
       Schema:
-        - AttributeDataType: String
-          Mutable: True
-          Name: username
-          Required: True
         - AttributeDataType: String
           Mutable: True
           Name: email
