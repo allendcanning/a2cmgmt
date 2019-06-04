@@ -66,7 +66,7 @@ Resources:
     Properties: 
       ClientName: mgmt
       ExplicitAuthFlows: 
-        - String
+        - ADMIN_NO_SRP_AUTH
       GenerateSecret: True
       RefreshTokenValidity: 30
       UserPoolId: !Ref theFirmuCognitoPool
