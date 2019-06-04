@@ -142,7 +142,8 @@ Resources:
       RoleName: a2c-mgmt-role
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-      Statement:
+      AssumeRolePolicyDocument:
+        Statement:
         -
           Effect: Allow
           Principal:
