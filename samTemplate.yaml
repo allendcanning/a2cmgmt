@@ -35,7 +35,7 @@ Resources:
         SourceArn: !Join ['',['arn:aws:ses:',!Ref "AWS::Region",':',!Ref "AWS::AccountId",':identity/admin@thefirmu.org']]
       EmailVerificationMessage: "Your FirmU verification code is {####}. "
       EmailVerificationSubject: "Your FirmU verification code"
-      MfaConfiguration: Off
+      MfaConfiguration: OFF
       Policies:
         PasswordPolicy:
           MinimumLength: 8
