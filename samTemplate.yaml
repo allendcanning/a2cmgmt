@@ -100,7 +100,7 @@ Resources:
           Action: ['cognito-idp:AdminInitiateAuth', 'cognito-idp:AdminCreateUser']
           Resource: !Ref theFirmuCognitoPool
       Roles:
-        - !GetAtt ["mgmtPortalRole","Arn"]
+        - !Ref "mgmtPortalRole"
   mgmtPortalDynamoPolicy:
     Type: AWS::IAM::Policy
     Properties:
