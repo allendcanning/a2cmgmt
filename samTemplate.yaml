@@ -99,7 +99,8 @@ Resources:
           Effect: Allow
           Action: ['cognito-idp:AdminInitiateAuth', 'cognito-idp:AdminCreateUser']
           Resource: !Ref theFirmuCognitoPool
-      Role: !Ref mgmtPortalRole
+      Roles:
+        - !Ref mgmtPortalRole
   mgmtPortalDynamoPolicy:
     Type: AWS::IAM::Policy
     Properties:
@@ -117,7 +118,8 @@ Resources:
                 "dynamodb:UpdateItem"
           ]
           Resource: !GetAtt [theFirmuDynamoDBTable,'Arn']
-      Role: !Ref mgmtPortalRole
+      Roles:
+        - !Ref mgmtPortalRole
   mgmtPortalSSMPolicy:
     Type: AWS::IAM::Policy
     Properties:
@@ -129,7 +131,8 @@ Resources:
           Effect: Allow
           Action: ['ssm:GetParameter']
           Resource: !Join ['',['arn:aws:ssm:',!Ref 'AWS::Region',':',!Ref 'AWS::AccountId',':parameter/a2c/*']]
-      Role: !Ref mgmtPortalRole
+      Roles:
+        - !Ref mgmtPortalRole
   mgmtPortalRole:
     Type: AWS::IAM::Role
     Properties:
