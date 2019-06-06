@@ -199,6 +199,6 @@ Outputs:
       Name: !Sub "${AWS::StackName}-DynamoDBARN"
   CognitoPoolArn:
     Description: ARN of the Cognito Pool
-    Value: !GetAtt ["theFirmUCognitoPool","Arn"]
+    Value: !GetAtt ["theFirmuCognitoPool","Arn"]
     Export:
       Name: !Sub "${AWS::StackName}-CognitoPoolARN"
