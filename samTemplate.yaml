@@ -98,7 +98,7 @@ Resources:
         -
           Effect: Allow
           Action: ['cognito-idp:AdminInitiateAuth', 'cognito-idp:AdminCreateUser']
-          Resource: !Ref theFirmuCognitoPool
+          Resource: !GetAtt ['theFirmuCognitoPool','Arn']
       Roles:
         - !Ref "mgmtPortalRole"
   mgmtPortalDynamoPolicy:
