@@ -19,12 +19,6 @@ time.tzset()
 # Open DB connection
 dynamodb = boto3.resource('dynamodb')
 
-# This information needs to move to paramater store
-table_name = "user_info"
-
-# Connect to dynamo db table
-t = dynamodb.Table(table_name)
-
 def log_error(msg):
   print(msg)
 
@@ -47,6 +41,10 @@ def get_config_data(environment):
   ssmpath="/a2c/"+environment+"/mgmt_cognito_client_secret_hash"
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   config['cognito_client_secret_hash'] =response['Parameter']['Value'] 
+
+  ssmpath="/a2c/"+environment+"/table_name"
+  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+  config['table_name'] =response['Parameter']['Value'] 
 
   ssmpath="/a2c/"+environment+"/content_url"
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
@@ -91,10 +89,6 @@ def add_cognito_user(config,record):
         {
             'Name': 'email',
             'Value': record['email'] 
-        },
-        {
-            'Name': 'phone_number',
-            'Value': '+1'+record['phone']
         }
       ]
     )
@@ -110,7 +104,17 @@ def add_cognito_user(config,record):
   return retval
 
 def add_dynamo_user(record):
+  # Make connection to DB table
+  t = dynamodb.Table(table_name)
+
   retval = {}
+
+  # Delete the action item
+  if 'action' in record:
+    del record['action']
+
+  if 'Submit' in record:
+    del record['Submit']
 
   # Add some error handling
   try:
@@ -137,7 +141,7 @@ def mgmt_handler(event, context):
   log_error("Event = "+json.dumps(event))
 
   config = get_config_data(environment)
-  
+
   content = start_html(config)
 
   # Parse form params
