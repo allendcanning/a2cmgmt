@@ -192,13 +192,13 @@ Resources:
       Action: 'lambda:InvokeFunction'
       Principal: elasticloadbalancing.amazonaws.com
 Outputs:
-  CognitoPolicy:
-    Description: Name of the Cognito Policy
-    Value: !Ref mgmtPortalCognitoPolicy
-    Export: 
-      Name: !Sub "${AWS::StackName}-CognitoPolicy"
-  DynamoPolicy:
-    Description: Name of the Dynamo Policy
-    Value: !Ref mgmtPortalDynamoPolicy
+  DynamoDBArn:
+    Description: ARN of the Dynamo DB table
+    Value: !GetAtt ["theFirmuDynamoDBTable","Arn"]
     Export:
-      Name: !Sub "${AWS::StackName}-DynamoPolicy"
+      Name: !Sub "${AWS::StackName}-DynamoDBARN"
+  CognitoPoolArn:
+    Description: ARN of the Cognito Pool
+    Value: !GetAtt ["theFirmUCognitoPool","Arn"]
+    Export:
+      Name: !Sub "${AWS::StackName}-CognitoPoolARN"
