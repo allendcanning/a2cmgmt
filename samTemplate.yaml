@@ -200,4 +200,5 @@ Outputs:
   DynamoPolicy:
     Description: Name of the Dynamo Policy
     Value: !Ref mgmtPortalDynamoPolicy
+    Export:
       Name: !Sub "${AWS::StackName}-DynamoPolicy"
