@@ -103,9 +103,9 @@ def add_cognito_user(config,record):
   log_error('retval = '+str(retval))
   return retval
 
-def add_dynamo_user(record):
+def add_dynamo_user(config,record):
   # Make connection to DB table
-  t = dynamodb.Table(table_name)
+  t = dynamodb.Table(config['table_name'])
 
   retval = {}
 
@@ -163,7 +163,7 @@ def mgmt_handler(event, context):
           content += "<h3>Unable to add user to cognito pool - "+response['message']+"</h3>"
         else:
           content += '<h3>Successfully added user to cognito pool</h3>\n'
-        response = add_dynamo_user(user_record)
+        response = add_dynamo_user(config,user_record)
         if not response['status']:
           content += "<h3>Unable to add user to dynamo db - "+response['message']+"</h3>"
         else:
