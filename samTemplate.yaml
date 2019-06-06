@@ -191,3 +191,13 @@ Resources:
       FunctionName: !GetAtt mgmtPortalFunction.Arn
       Action: 'lambda:InvokeFunction'
       Principal: elasticloadbalancing.amazonaws.com
+Outputs:
+  CognitoPolicy:
+    Description: Name of the Cognito Policy
+    Value: !Ref mgmtPortalCognitoPolicy
+    Export: 
+      Name: !Sub "${AWS::StackName}-CognitoPolicy"
+  DynamoPolicy:
+    Description: Name of the Dynamo Policy
+    Value: !Ref mgmtPortalDynamoPolicy
+      Name: !Sub "${AWS::StackName}-DynamoPolicy"
