@@ -202,3 +202,8 @@ Outputs:
     Value: !GetAtt ["theFirmuCognitoPool","Arn"]
     Export:
       Name: !Sub "${AWS::StackName}-CognitoPoolARN"
+  CognitoPoolId:
+    Description: ID of the Cognito Pool
+    Value: !Ref "theFirmuCognitoPool"
+    Export:
+      Name: !Sub "${AWS::StackName}-CognitoPoolId"
