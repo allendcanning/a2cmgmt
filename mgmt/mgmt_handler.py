@@ -92,7 +92,7 @@ def add_cognito_user(config,record):
         }
       ]
     )
-    retval['state'] = True
+    retval['status'] = True
     retval['message'] = "Successfully added user"
   except ClientError as e:
     log_error("response = "+json.dumps(e.response))
