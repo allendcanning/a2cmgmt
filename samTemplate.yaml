@@ -85,10 +85,11 @@ Resources:
       Name: /a2c/dev/mgmt_cognito_client_id
       Type: String
       Value: !Ref theFirmuMgmtCognitoClient
-  cognitoAuthUrl:
+  cognitoAuthUrlSSM:
     Type: AWS::SSM::Parameter
     Properties:
       Name: /a2c/dev/cognito_auth_url
+      Type: String
       Value: "https://thefirmu.auth.us-east-1.amazoncognito.com/oath2/"
   dynamoDBTableNameSSM:
     Type: AWS::SSM::Parameter
