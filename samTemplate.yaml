@@ -91,6 +91,12 @@ Resources:
       Name: /a2c/dev/cognito_auth_url
       Type: String
       Value: "https://thefirmu.auth.us-east-1.amazoncognito.com/oath2/"
+  cognitoContentUrlSSM:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: /a2c/dev/content_url
+      Type: String
+      Value: "https://devportal.thefirmu.org"
   dynamoDBTableNameSSM:
     Type: AWS::SSM::Parameter
     Properties: 
