@@ -46,9 +46,25 @@ def get_config_data(environment):
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   config['table_name'] =response['Parameter']['Value'] 
 
-  ssmpath="/a2c/"+environment+"/content_url"
+  ssmpath="/a2c/"+environment+"/admin_content_url"
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   config['content_url'] =response['Parameter']['Value'] 
+
+  ssmpath="/a2c/"+environment+"/admin_cognito_pool"
+  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+  config['admin_cognito_pool'] =response['Parameter']['Value'] 
+
+  ssmpath="/a2c/"+environment+"/admin_cognito_client_id"
+  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+  config['admin_cognito_client_id'] =response['Parameter']['Value'] 
+
+  ssmpath="/a2c/"+environment+"/admin_cognito_client_secret_hash"
+  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+  config['admin_cognito_client_secret_hash'] =response['Parameter']['Value'] 
+
+  ssmpath="/a2c/"+environment+"/admin_cognito_auth_url"
+  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+  config['cognito_auth_url'] =response['Parameter']['Value'] 
 
   for item in config:
     log_error("Got config key = "+item+" value = "+config[item])
@@ -64,10 +80,16 @@ def start_html(config):
 
   return content
 
-def print_form():
+def print_top_menu():
+  content = '<h3>The Firm U Administration Portal</h3>\n'
+  content += '<a href="?action=add_user">Add User to The FirmU</a>'
+  content += '<a href="?action=email_coaches">Email Coaches</a>'
+
+  return content 
+  
+def print_add_user_form():
   content = '<form method="post" action="">'
   content += 'Enter Username: <input type="text" name="username"><p>\n'
-  content += 'Enter Mobile Phone: <input type="tel" id="phone" name="phone" pattern="[0-9]{3}[0-9]{3}[0-9]{4}"><p>\n'
   content += 'Enter Email Address: <input type="email" name="email"><p>\n'
   content += '<input type="hidden" name="action" value="add">\n'
   content += '<input type="submit" name="Submit">'
@@ -132,6 +154,31 @@ def add_dynamo_user(config,record):
   
   return retval
 
+def check_token(config,event):
+  token = 'False'
+  auth_record = {}
+  auth_record['token'] = 'False'
+  auth_record['username'] = 'False'
+
+  # Get jwt token
+  if 'headers' in event:
+    if event['headers'] != None:
+      if 'cookie' in event['headers']:
+        cookie = event['headers']['cookie']
+        if ';' in cookie:
+          cookies = cookie.split(';')
+          if 'AWSELBAuthSessionCookie-0' in cookies:
+            token = cookies['AWSELBAuthSessionCookie-0'].split('=')[1]
+            log_error('Got Token = '+token)
+            if token != 'False':
+              auth_record = validate_token(config,token)
+      elif 'x-amzn-oidc-accesstoken' in event['headers']:
+        token = event['headers']['x-amzn-oidc-accesstoken']
+        log_error('Got Token = '+token) 
+        auth_record = validate_token(config,token)
+
+  return auth_record
+
 def mgmt_handler(event, context):
   token = False
   action = "False"
@@ -142,45 +189,75 @@ def mgmt_handler(event, context):
 
   config = get_config_data(environment)
 
+  # Check for token
+  auth_record = check_token(config,event)
+
   content = start_html(config)
 
-  # Parse form params
-  if 'body' in event:
-    if bool(event['body'] and event['body'].strip()):
-      # Parse the post parameters
-      postparams = event['body']
-      postparams = base64.b64decode(bytes(postparams,'UTF-8')).decode('utf-8')
-      log_error('Got post params = '+postparams)
-      raw_record = urllib.parse.parse_qs(postparams)
-      for item in raw_record:
-        user_record[item] = raw_record[item][0]
+  if auth_record['token'] == 'False':
+    if 'queryStringParameters' in event:
+      if event['queryStringParameters'] != None:
+        if 'code' in event['queryStringParameters']:
+          token = getTokenFromOauthCode(code)
+          log_error("Token = ",token)
+        else:
+          # Redirect to oauth login form
+          url = config['cognito_auth_url']+"authorize?response_type=code&client_id="+config['admin_cognito_client_id']+"&redirect_uri="+config['content_url']
 
-    log_error('user_record = '+str(user_record))
-    if 'action' in user_record:
-      if user_record['action'] == 'add':
-        response = add_cognito_user(config,user_record)
-        if not response['status']:
-          content += "<h3>Unable to add user to cognito pool - "+response['message']+"</h3>"
-        else:
-          content += '<h3>Successfully added user to cognito pool</h3>\n'
-        response = add_dynamo_user(config,user_record)
-        if not response['status']:
-          content += "<h3>Unable to add user to dynamo db - "+response['message']+"</h3>"
-        else:
-          content += '<h3>Successfully added user to dynamo db</h3>\n'
-    else:
-      content += print_form()
+          return { 'statusCode': 301,
+           'headers': {
+              'Location': url
+           }
+          }
   else:
-    content += print_form()
+    token = auth_record['token']
 
-  content += "</body></html>"
+    if 'queryStringParameters' in event:
+      if event['queryStringParameters'] != None:
+        if 'action' in event['queryStringParameters']:
+          if action == 'add_user':
+            content += print_add_user_form()
+          elif action == 'email_coaches':
+            content += '<h3>This has not been implemented as of yet</h3>'
+          else:
+            content += print_top_menu()
+    # Parse form params
+    elif 'body' in event:
+      if bool(event['body'] and event['body'].strip()):
+        # Parse the post parameters
+        postparams = event['body']
+        postparams = base64.b64decode(bytes(postparams,'UTF-8')).decode('utf-8')
+        log_error('Got post params = '+postparams)
+        raw_record = urllib.parse.parse_qs(postparams)
+        for item in raw_record:
+          user_record[item] = raw_record[item][0]
 
-  cookie = 'Token='+str(token)
+      log_error('user_record = '+str(user_record))
+      if 'action' in user_record:
+        if user_record['action'] == 'add':
+          response = add_cognito_user(config,user_record)
+          if not response['status']:
+            content += "<h3>Unable to add user to cognito pool - "+response['message']+"</h3>"
+          else:
+            content += '<h3>Successfully added user to cognito pool</h3>\n'
+          response = add_dynamo_user(config,user_record)
+          if not response['status']:
+            content += "<h3>Unable to add user to dynamo db - "+response['message']+"</h3>"
+          else:
+            content += '<h3>Successfully added user to dynamo db</h3>\n'
+        elif user_record['action'] == 'email':
+          content += '<h4>This has not been implemented yet</h4>'
+      else:
+        content += print_top_menu()
+    else:
+      content += print_top_menu()
+
+    content += "</body></html>"
+
   return {
     'statusCode': 200,
     'headers': {
       'Content-type': 'text/html',
-      'Set-Cookie': cookie
     },
     'body': content
   }
