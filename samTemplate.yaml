@@ -276,7 +276,7 @@ Resources:
           AuthenticateCognitoConfig:
             UserPoolArn: !GetAtt  ['theFirmuAdminCognitoPool','Arn']
             UserPoolClientId: !Ref theFirmuAdminCognitoClient
-            UserPoolDomain: "thefirmuadmin"
+            UserPoolDomain: "thefirmu-admin"
           Order: 1
         - Type: forward
           TargetGroupArn: !Ref TargetGroup
