@@ -377,6 +377,9 @@ Resources:
       Protocol: HTTP
   CognitoAdminListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    DependsOn: 
+      - theFirmuAdminDomain
+      - theFirmuAdminCognitoClientSettings
     Properties: 
       Actions: 
         - Type: authenticate-cognito
