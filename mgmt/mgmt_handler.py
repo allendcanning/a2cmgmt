@@ -83,10 +83,19 @@ def start_html(config):
 def print_top_menu():
   content = '<h3>The Firm U Administration Portal</h3>\n'
   content += '<a href="?action=add_user">Add User to The FirmU</a>'
+  content += '<a href="?action=rm_user">Remove User from The FirmU</a>'
   content += '<a href="?action=email_coaches">Email Coaches</a>'
 
   return content 
   
+def print_rm_user_form():
+  content = '<h3>The Firm U Remove a User page</h3>\n'
+  content = '<form method="post" action="">'
+  content += 'Enter Username: <input type="text" name="username"><p>\n'
+  content += '<input type="hidden" name="action" value="rm">\n'
+  content += '<input type="submit" name="Submit">'
+  content += '</form>'
+
 def print_add_user_form():
   content = '<form method="post" action="">'
   content += 'Enter Username: <input type="text" name="username"><p>\n'
@@ -116,6 +125,28 @@ def add_cognito_user(config,record):
     )
     retval['status'] = True
     retval['message'] = "Successfully added user"
+  except ClientError as e:
+    log_error("response = "+json.dumps(e.response))
+    log_error("Error is "+e.response['Error']['Message'])
+    retval['status'] = False
+    retval['message'] = e.response['Error']['Message']
+
+  log_error('retval = '+str(retval))
+  return retval
+
+def rm_cognito_user(config,record):
+  cognito = boto3.client('cognito-idp')
+  retval = {}
+
+  log_error('Inside add cognito')
+  # Create cognito pool user
+  try:
+    response = cognito.admin_delete_user(
+      UserPoolId=config['cognito_pool'],
+      Username=record['username']
+    )
+    retval['status'] = True
+    retval['message'] = "Successfully removed user"
   except ClientError as e:
     log_error("response = "+json.dumps(e.response))
     log_error("Error is "+e.response['Error']['Message'])
@@ -245,6 +276,12 @@ def mgmt_handler(event, context):
             content += "<h3>Unable to add user to dynamo db - "+response['message']+"</h3>"
           else:
             content += '<h3>Successfully added user to dynamo db</h3>\n'
+        elif user_record['action'] == 'rm':
+          response = rm_cognito_user(config,user_record)
+          if not response['status']:
+            content += "<h3>Unable to remove user from cognito pool - "+response['message']+"</h3>"
+          else:
+            content += '<h3>Successfully removed user from cognito pool</h3>\n'
         elif user_record['action'] == 'email':
           content += '<h4>This has not been implemented yet</h4>'
       else:
