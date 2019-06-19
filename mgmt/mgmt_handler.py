@@ -239,6 +239,7 @@ def mgmt_handler(event, context):
           return { 'statusCode': 301,
            'headers': {
               'Location': url
+              'Cache-Control': 'no-store'
            }
           }
   else:
@@ -296,6 +297,7 @@ def mgmt_handler(event, context):
     'statusCode': 200,
     'headers': {
       'Content-type': 'text/html',
+      'Cache-Control': 'no-store'
     },
     'body': content
   }
