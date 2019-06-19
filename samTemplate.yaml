@@ -151,7 +151,7 @@ Resources:
       UserPoolClientId: !Ref theFirmuAdminCognitoClient
       SupportedIdentityProviders:
         - COGNITO
-      CallbackURL: 'https://adminportal.thefirmu.org,https://a2c-m-LoadB-1C16B9Q4RWSSF-1311511375.us-east-1.elb.amazonaws.com/oauth2/idpresponse,https://devportal.thefirmu.org/oauth2/idpresponse'
+      CallbackURL: 'https://adminportal.thefirmu.org,https://a2c-m-LoadB-1C16B9Q4RWSSF-1311511375.us-east-1.elb.amazonaws.com/oauth2/idpresponse,https://devportal.thefirmu.org/oauth2/idpresponse,https://a2c-m-LoadB-1C16B9Q4RWSSF-1311511375.us-east-1.elb.amazonaws.com'
       LogoutURL: 'https://adminportal.thefirmu.org'
       AllowedOAuthFlowsUserPoolClient: true
       AllowedOAuthFlows:
