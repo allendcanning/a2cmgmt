@@ -15,6 +15,12 @@ Parameters:
   AdminCognitoDomain:
     Type: String
     Default: thefirmu-admin
+  ContentUrl:
+    Type: String
+    Default: "https://devportal.thefirmu.org"
+  AdminContentUrl:
+    Type: String
+    Default: "https://adminportal.thefirmu.org"
 Mappings:
   VPC2Subnet:
     vpc-729d3814:
@@ -151,8 +157,8 @@ Resources:
       UserPoolClientId: !Ref theFirmuAdminCognitoClient
       SupportedIdentityProviders:
         - COGNITO
-      CallbackURL: 'https://adminportal.thefirmu.org,https://a2c-m-LoadB-1C16B9Q4RWSSF-1311511375.us-east-1.elb.amazonaws.com/oauth2/idpresponse,https://devportal.thefirmu.org/oauth2/idpresponse,https://a2c-m-LoadB-1C16B9Q4RWSSF-1311511375.us-east-1.elb.amazonaws.com'
-      LogoutURL: 'https://adminportal.thefirmu.org'
+      CallbackURL: !Join ['',[!Ref AdminContentUrl,',https://',!GetAtt ['LoadBalancer','DNSName'],'/oauth2/idpresponse,',!Ref AdminContentUrl,'/oauth2/idpresponse,https://',!GetAtt ['LoadBalancer','DNSName']]]
+      LogoutURL: !Ref AdminContentUrl
       AllowedOAuthFlowsUserPoolClient: true
       AllowedOAuthFlows:
         - code
@@ -206,8 +212,8 @@ Resources:
       UserPoolClientId: !Ref theFirmuMgmtCognitoClient
       SupportedIdentityProviders:
         - COGNITO
-      CallbackURL: 'https://devportal.thefirmu.org,https://a2c-s-LoadB-1CEVWFSTPTV96-664007760.us-east-1.elb.amazonaws.com/oauth2/idpresponse,https://adminportal.thefirmu.org/oath2/idpresponse'
-      LogoutURL: 'https://devportal.thefirmu.org'
+      CallbackURL: !Join ['',[!Ref ContentUrl,',https://',!ImportValue 'a2c-stack-LBDnsName','/oauth2/idpresponse,',!Ref ContentUrl,'/oauth2/idpresponse,https://',!ImportValue 'a2c-stack-LBDnsName']]
+      LogoutURL: !Ref ContentUrl
       AllowedOAuthFlowsUserPoolClient: true
       AllowedOAuthFlows:
         - code
@@ -291,13 +297,13 @@ Resources:
     Properties:
       Name: /a2c/dev/content_url
       Type: String
-      Value: "https://devportal.thefirmu.org"
+      Value: !Ref ContentUrl
   cognitoAdminContentUrlSSM:
     Type: AWS::SSM::Parameter
     Properties:
       Name: /a2c/dev/admin_content_url
       Type: String
-      Value: "https://adminportal.thefirmu.org"
+      Value: !Ref AdminContentUrl
   dynamoDBTableNameSSM:
     Type: AWS::SSM::Parameter
     Properties: 
