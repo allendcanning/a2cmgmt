@@ -9,6 +9,12 @@ Parameters:
   VpcId:
     Type: AWS::EC2::VPC::Id
     Default: vpc-729d3814
+  CognitoDomain:
+    Type: String
+    Default: thefirmu
+  AdminCognitoDomain:
+    Type: String
+    Default: thefirmu-admin
 Mappings:
   VPC2Subnet:
     vpc-729d3814:
@@ -145,8 +151,8 @@ Resources:
       UserPoolClientId: !Ref theFirmuAdminCognitoClient
       SupportedIdentityProviders:
         - COGNITO
-      CallbackURL: 'https://adminportal.thefirmu.org,https://a2c-m-LoadB-1C16B9Q4RWSSF-1311511375.us-east-1.elb.amazonaws.com'
-      LogoutURL: 'https://adminportal.thefirmu.org,https://a2c-m-LoadB-1C16B9Q4RWSSF-1311511375.us-east-1.elb.amazonaws.com'
+      CallbackURL: 'https://adminportal.thefirmu.org,https://a2c-m-LoadB-1C16B9Q4RWSSF-1311511375.us-east-1.elb.amazonaws.com/oauth2/idpresponse,https://devportal.thefirmu.org/oauth2/idpresponse'
+      LogoutURL: 'https://adminportal.thefirmu.org'
       AllowedOAuthFlowsUserPoolClient: true
       AllowedOAuthFlows:
         - code
@@ -157,7 +163,7 @@ Resources:
     Properties:
       ServiceToken: !GetAtt CloudFormationCognitoUserPoolDomain.Arn
       UserPoolId: !Ref theFirmuAdminCognitoPool
-      Domain: 'thefirmu-admin'
+      Domain: !Ref AdminCognitoDomain
   theFirmuCognitoPool:
     Type: AWS::Cognito::UserPool
     Properties:
@@ -192,6 +198,27 @@ Resources:
           Name: email
           Required: True
       UserPoolName: "thefirmu"
+  theFirmuCognitoClientSettings:
+    Type: 'Custom::CognitoUserPoolClientSettings'
+    Properties:
+      ServiceToken: !GetAtt CloudFormationCognitoUserPoolClientSettings.Arn
+      UserPoolId: !Ref theFirmuCognitoPool
+      UserPoolClientId: !Ref theFirmuMgmtCognitoClient
+      SupportedIdentityProviders:
+        - COGNITO
+      CallbackURL: 'https://devportal.thefirmu.org,https://a2c-s-LoadB-1CEVWFSTPTV96-664007760.us-east-1.elb.amazonaws.com/oauth2/idpresponse,https://adminportal.thefirmu.org/oath2/idpresponse'
+      LogoutURL: 'https://devportal.thefirmu.org'
+      AllowedOAuthFlowsUserPoolClient: true
+      AllowedOAuthFlows:
+        - code
+      AllowedOAuthScopes:
+        - openid
+  theFirmuDomain:
+    Type: 'Custom::CognitoUserPoolDomain'
+    Properties:
+      ServiceToken: !GetAtt CloudFormationCognitoUserPoolDomain.Arn
+      UserPoolId: !Ref theFirmuCognitoPool
+      Domain: !Ref CognitoDomain
   theFirmuDynamoDBTable:
     Type: "AWS::DynamoDB::Table"
     Properties:
@@ -252,13 +279,13 @@ Resources:
     Properties:
       Name: /a2c/dev/cognito_auth_url
       Type: String
-      Value: "https://thefirmu.auth.us-east-1.amazoncognito.com/oath2/"
+      Value: !Join ['',['https://',!Ref CognitoDomain,'.auth.us-east-1.amazoncognito.com/oath2/']]
   cognitoAdminAuthUrlSSM:
     Type: AWS::SSM::Parameter
     Properties:
       Name: /a2c/dev/admin_cognito_auth_url
       Type: String
-      Value: "https://thefirmuadmin.auth.us-east-1.amazoncognito.com/oath2/"
+      Value: !Join ['',['https://',!Ref AdminCognitoDomain,'.auth.us-east-1.amazoncognito.com/oath2/']]
   cognitoContentUrlSSM:
     Type: AWS::SSM::Parameter
     Properties:
