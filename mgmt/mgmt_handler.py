@@ -210,6 +210,20 @@ def check_token(config,event):
 
   return auth_record
 
+def getTokenFromOauthCode(config,code,redirect_uri):
+  auth_header = base64.b64encode(bytes(config['admin_cognito_client_id']+':'+config['admin_cognito_client_secret_hash'],'UTF-8'))
+  data = {
+    "grant_type": "authorization_code",
+    "code": code,
+    "client_id": config['admin_cognito_client_id'],
+    "redirect_uri": redirect_uri
+  }
+  r = requests.post(config['cognito_auth_url']+'token',auth=auth_header,data=data)
+
+  res = r.json()
+
+  return res['id_token']
+
 def mgmt_handler(event, context):
   token = False
   action = "False"
