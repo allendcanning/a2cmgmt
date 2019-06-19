@@ -399,15 +399,6 @@ Resources:
       - CertificateArn: 'arn:aws:acm:us-east-1:530317771161:certificate/457def3f-75de-447d-90a5-96af2c6690db'
       Port: 443
       Protocol: HTTPS
-  HttpListener:
-    Type: 'AWS::ElasticLoadBalancingV2::Listener'
-    Properties:
-      DefaultActions:
-      - TargetGroupArn: !Ref TargetGroup
-        Type: forward
-      LoadBalancerArn: !Ref LoadBalancer
-      Port: 80
-      Protocol: HTTP
   CognitoAdminListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     DependsOn: 
@@ -434,11 +425,6 @@ Resources:
     Properties:
       GroupDescription: Allow http to client host
       VpcId: !Ref VpcId
-      SecurityGroupIngress:
-      - IpProtocol: tcp
-        FromPort: 80
-        ToPort: 80
-        CidrIp: 0.0.0.0/0
       - IpProtocol: tcp
         FromPort: 443
         ToPort: 443
