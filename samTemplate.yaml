@@ -297,13 +297,13 @@ Resources:
     Properties:
       Name: /a2c/dev/content_url
       Type: String
-      Value: !Ref ContentUrl
+      Value: !Join ['',[!Ref ContentUrl,'/']]
   cognitoAdminContentUrlSSM:
     Type: AWS::SSM::Parameter
     Properties:
       Name: /a2c/dev/admin_content_url
       Type: String
-      Value: !Ref AdminContentUrl
+      Value: !Join ['',[!Ref AdminContentUrl,'/']]
   dynamoDBTableNameSSM:
     Type: AWS::SSM::Parameter
     Properties: 
