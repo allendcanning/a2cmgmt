@@ -425,6 +425,7 @@ Resources:
     Properties:
       GroupDescription: Allow http to client host
       VpcId: !Ref VpcId
+      SecurityGroupIngress:
       - IpProtocol: tcp
         FromPort: 443
         ToPort: 443
