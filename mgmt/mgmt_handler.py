@@ -247,7 +247,7 @@ def mgmt_handler(event, context):
           log_error("Token = ",token)
         else:
           # Redirect to oauth login form
-          url = config['cognito_auth_url']+"authorize?response_type=code&scope=openid&client_id="+config['admin_cognito_client_id']+"&redirect_uri="+config['content_url']
+          url = config['cognito_auth_url']+"authorize?response_type=code&client_id="+config['admin_cognito_client_id']+"&redirect_uri="+config['content_url']
           log_error("Sending to "+url)
 
           return { 'statusCode': 301,
