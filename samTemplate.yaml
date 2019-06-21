@@ -337,7 +337,7 @@ Outputs:
       Name: !Sub "${AWS::StackName}-DynamoDBARN"
   mgmtRole:
     Description: ARN of the IAM role for mgmt
-    Value: !GetAtt ["mgmtPortalRole","Arn"]
+    Value: !Ref mgmtPortalRole"
     Export:
       Name: !Sub "${AWS::StackName}-MgmtRole"
   ClientSettingsLambdaArn:
