@@ -151,7 +151,7 @@ Resources:
       UserPoolClientId: !Ref theFirmuAdminCognitoClient
       SupportedIdentityProviders:
         - COGNITO
-      CallbackURL: !Join ['',[!Ref AdminContentUrl,', https://',!GetAtt ['LoadBalancer','DNSName'],'/oauth2/idpresponse, ',!Ref AdminContentUrl,'/oauth2/idpresponse, https://',!GetAtt ['LoadBalancer','DNSName']]]
+      CallbackURL: !Join ['',[!Ref AdminContentUrl,',https://',!GetAtt ['LoadBalancer','DNSName'],'/oauth2/idpresponse,',!Ref AdminContentUrl,'/oauth2/idpresponse,https://',!GetAtt ['LoadBalancer','DNSName']]]
       LogoutURL: !Ref AdminContentUrl
       AllowedOAuthFlowsUserPoolClient: true
       AllowedOAuthFlows:
