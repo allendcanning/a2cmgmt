@@ -151,7 +151,7 @@ Resources:
       UserPoolClientId: !Ref theFirmuAdminCognitoClient
       SupportedIdentityProviders:
         - COGNITO
-      CallbackURL: !Join ['',[!Ref AdminContentUrl,',https://',!GetAtt ['LoadBalancer','DNSName'],'/oauth2/idpresponse,',!Ref AdminContentUrl,'/oauth2/idpresponse,https://',!GetAtt ['LoadBalancer','DNSName']]]
+      CallbackURL: !Join ['',[!Ref AdminContentUrl,' ,https://',!GetAtt ['LoadBalancer','DNSName'],'/oauth2/idpresponse, ',!Ref AdminContentUrl,'/oauth2/idpresponse, https://',!GetAtt ['LoadBalancer','DNSName']]]
       LogoutURL: !Ref AdminContentUrl
       AllowedOAuthFlowsUserPoolClient: true
       AllowedOAuthFlows:
@@ -340,3 +340,13 @@ Outputs:
     Value: !GetAtt ["mgmtPortalRole","Arn"]
     Export:
       Name: !Sub "${AWS::StackName}-MgmtRole"
+  ClientSettingsLambdaArn:
+    Description: ARN of Client Settings lambda 
+    Value: !GetAtt ["CloudFormationCognitoUserPoolClientSettings","Arn"]
+    Export:
+      Name: !Sub "${AWS::StackName}-CognitoClientSettingsLambda"
+  ClientDomainLambdaArn:
+    Description: ARN of Client Domain lambda 
+    Value: !GetAtt ["CloudFormationCognitoUserPoolDomain","Arn"]
+    Export:
+      Name: !Sub "${AWS::StackName}-CognitoUserDomainLambda"
