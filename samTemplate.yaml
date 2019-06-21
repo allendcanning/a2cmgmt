@@ -216,19 +216,6 @@ Resources:
       Name: /a2c/dev/table_name
       Type: String
       Value: !Ref theFirmuDynamoDBTable
-  mgmtPortalCognitoPolicy:
-    Type: AWS::IAM::Policy
-    Properties:
-      PolicyName: "thefirmu.cognito.allow"
-      PolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-        -
-          Effect: Allow
-          Action: ['cognito-idp:AdminInitiateAuth', 'cognito-idp:AdminCreateUser']
-          Resource: !GetAtt ['theFirmuCognitoPool','Arn']
-      Roles:
-        - !Ref "mgmtPortalRole"
   mgmtPortalDynamoPolicy:
     Type: AWS::IAM::Policy
     Properties:
@@ -348,3 +335,8 @@ Outputs:
     Value: !GetAtt ["theFirmuDynamoDBTable","Arn"]
     Export:
       Name: !Sub "${AWS::StackName}-DynamoDBARN"
+  mgmtRole:
+    Description: ARN of the IAM role for mgmt
+    Value: !GetAtt ["mgmtPortalRole","Arn"]
+    Export:
+      Name: !Sub "${AWS::StackName}-MgmtRole"
