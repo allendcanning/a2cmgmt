@@ -9,15 +9,9 @@ Parameters:
   VpcId:
     Type: AWS::EC2::VPC::Id
     Default: vpc-729d3814
-  CognitoDomain:
-    Type: String
-    Default: thefirmu
   AdminCognitoDomain:
     Type: String
     Default: thefirmu-admin
-  ContentUrl:
-    Type: String
-    Default: "https://devportal.thefirmu.org"
   AdminContentUrl:
     Type: String
     Default: "https://adminportal.thefirmu.org"
@@ -170,61 +164,6 @@ Resources:
       ServiceToken: !GetAtt CloudFormationCognitoUserPoolDomain.Arn
       UserPoolId: !Ref theFirmuAdminCognitoPool
       Domain: !Ref AdminCognitoDomain
-  theFirmuCognitoPool:
-    Type: AWS::Cognito::UserPool
-    Properties:
-      AdminCreateUserConfig:
-         AllowAdminCreateUserOnly: True
-         InviteMessageTemplate:
-           EmailMessage: "Welcome to The Firmu!  Below you will find your username and temporary password.  Please go to https://devportal.thefirmu.org to change your password.\n\nYour username is {username} and temporary password is {####}. \n\nThank you for being a member of The FirmU!"
-           EmailSubject: "Welcome to The FirmU!"
-      AutoVerifiedAttributes:
-        - email
-      DeviceConfiguration:
-        ChallengeRequiredOnNewDevice: False
-        DeviceOnlyRememberedOnUserPrompt: False
-      EmailConfiguration:
-        EmailSendingAccount: DEVELOPER
-        ReplyToEmailAddress: admin@thefirmu.org
-        SourceArn: !Join ['',['arn:aws:ses:',!Ref "AWS::Region",':',!Ref "AWS::AccountId",':identity/admin@thefirmu.org']]
-      EmailVerificationMessage: "Your FirmU verification code is {####}. Please go to https://devportal.thefirmu.org"
-      EmailVerificationSubject: "Your FirmU verification code"
-      MfaConfiguration: "OFF"
-      Policies:
-        PasswordPolicy:
-          MinimumLength: 8
-          RequireLowercase: True
-          RequireNumbers: True
-          RequireSymbols: True
-          RequireUppercase: True
-          TemporaryPasswordValidityDays: 7
-      Schema:
-        - AttributeDataType: String
-          Mutable: True
-          Name: email
-          Required: True
-      UserPoolName: "thefirmu"
-  theFirmuCognitoClientSettings:
-    Type: 'Custom::CognitoUserPoolClientSettings'
-    Properties:
-      ServiceToken: !GetAtt CloudFormationCognitoUserPoolClientSettings.Arn
-      UserPoolId: !Ref theFirmuCognitoPool
-      UserPoolClientId: !Ref theFirmuMgmtCognitoClient
-      SupportedIdentityProviders:
-        - COGNITO
-      CallbackURL: !Join ['',[!Ref ContentUrl,',https://',!ImportValue 'a2c-stack-LBDnsName','/oauth2/idpresponse,',!Ref ContentUrl,'/oauth2/idpresponse,https://',!ImportValue 'a2c-stack-LBDnsName']]
-      LogoutURL: !Ref ContentUrl
-      AllowedOAuthFlowsUserPoolClient: true
-      AllowedOAuthFlows:
-        - code
-      AllowedOAuthScopes:
-        - openid
-  theFirmuDomain:
-    Type: 'Custom::CognitoUserPoolDomain'
-    Properties:
-      ServiceToken: !GetAtt CloudFormationCognitoUserPoolDomain.Arn
-      UserPoolId: !Ref theFirmuCognitoPool
-      Domain: !Ref CognitoDomain
   theFirmuDynamoDBTable:
     Type: "AWS::DynamoDB::Table"
     Properties:
@@ -238,15 +177,6 @@ Resources:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
       TableName: "thefirmu_user_info"
-  theFirmuMgmtCognitoClient:
-    Type: AWS::Cognito::UserPoolClient
-    Properties: 
-      ClientName: mgmt
-      ExplicitAuthFlows: 
-        - ADMIN_NO_SRP_AUTH
-      GenerateSecret: True
-      RefreshTokenValidity: 30
-      UserPoolId: !Ref theFirmuCognitoPool
   theFirmuAdminCognitoClient:
     Type: AWS::Cognito::UserPoolClient
     Properties: 
@@ -256,48 +186,24 @@ Resources:
       GenerateSecret: True
       RefreshTokenValidity: 30
       UserPoolId: !Ref theFirmuAdminCognitoPool
-  cognitoPoolSSM:
-    Type: AWS::SSM::Parameter
-    Properties: 
-      Name: /a2c/dev/cognito_pool
-      Type: String
-      Value: !Ref theFirmuCognitoPool
   cognitoAdminPoolSSM:
     Type: AWS::SSM::Parameter
     Properties: 
       Name: /a2c/dev/admin_cognito_pool
       Type: String
       Value: !Ref theFirmuAdminCognitoPool
-  cognitoClientIdSSM:
-    Type: AWS::SSM::Parameter
-    Properties: 
-      Name: /a2c/dev/mgmt_cognito_client_id
-      Type: String
-      Value: !Ref theFirmuMgmtCognitoClient
   cognitoAdminClientIdSSM:
     Type: AWS::SSM::Parameter
     Properties: 
       Name: /a2c/dev/admin_cognito_client_id
       Type: String
       Value: !Ref theFirmuAdminCognitoClient
-  cognitoAuthUrlSSM:
-    Type: AWS::SSM::Parameter
-    Properties:
-      Name: /a2c/dev/cognito_auth_url
-      Type: String
-      Value: !Join ['',['https://',!Ref CognitoDomain,'.auth.us-east-1.amazoncognito.com/oath2/']]
   cognitoAdminAuthUrlSSM:
     Type: AWS::SSM::Parameter
     Properties:
       Name: /a2c/dev/admin_cognito_auth_url
       Type: String
       Value: !Join ['',['https://',!Ref AdminCognitoDomain,'.auth.us-east-1.amazoncognito.com/oath2/']]
-  cognitoContentUrlSSM:
-    Type: AWS::SSM::Parameter
-    Properties:
-      Name: /a2c/dev/content_url
-      Type: String
-      Value: !Join ['',[!Ref ContentUrl,'/']]
   cognitoAdminContentUrlSSM:
     Type: AWS::SSM::Parameter
     Properties:
@@ -442,13 +348,3 @@ Outputs:
     Value: !GetAtt ["theFirmuDynamoDBTable","Arn"]
     Export:
       Name: !Sub "${AWS::StackName}-DynamoDBARN"
-  CognitoPoolArn:
-    Description: ARN of the Cognito Pool
-    Value: !GetAtt ["theFirmuCognitoPool","Arn"]
-    Export:
-      Name: !Sub "${AWS::StackName}-CognitoPoolARN"
-  CognitoPoolId:
-    Description: ID of the Cognito Pool
-    Value: !Ref "theFirmuCognitoPool"
-    Export:
-      Name: !Sub "${AWS::StackName}-CognitoPoolId"
