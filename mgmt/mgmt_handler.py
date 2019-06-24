@@ -95,14 +95,17 @@ def print_rm_user_form():
   content += '<input type="hidden" name="action" value="rm">\n'
   content += '<input type="submit" name="Submit">'
   content += '</form>'
+  content += '<p><a href="">Back to Admin page</a>'
 
 def print_add_user_form():
-  content = '<form method="post" action="">'
+  content = '<h4>Add a user to The FirmU</h4>'
+  content += '<form method="post" action="">'
   content += 'Enter Username: <input type="text" name="username"><p>\n'
   content += 'Enter Email Address: <input type="email" name="email"><p>\n'
   content += '<input type="hidden" name="action" value="add">\n'
   content += '<input type="submit" name="Submit">'
   content += '</form>'
+  content += '<p><a href="">Back to Admin page</a>'
 
   return content
 
@@ -354,14 +357,19 @@ def mgmt_handler(event, context):
             content += "<h3>Unable to add user to dynamo db - "+response['message']+"</h3>"
           else:
             content += '<h3>Successfully added user to dynamo db</h3>\n'
+          content += '<p><a href="?action=add_user">Back to Add User Page</a>'
+          content += '<p><a href="">Back to Admin Page</a>'
         elif user_record['action'] == 'rm':
           response = rm_cognito_user(config,user_record)
           if not response['status']:
             content += "<h3>Unable to remove user from cognito pool - "+response['message']+"</h3>"
           else:
             content += '<h3>Successfully removed user from cognito pool</h3>\n'
+          content += '<p><a href="?action=rm_user">Back to Remove User Page</a>'
+          content += '<p><a href="">Back to Admin Page</a>'
         elif user_record['action'] == 'email':
           content += '<h4>This has not been implemented yet</h4>'
+          content += '<p><a href="">Back to Admin Page</a>'
       else:
         content += print_top_menu()
     else:
@@ -373,7 +381,9 @@ def mgmt_handler(event, context):
     'statusCode': 200,
     'headers': {
       'Content-type': 'text/html',
-      'Cache-Control': 'no-store'
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': 0
     },
     'body': content
   }
