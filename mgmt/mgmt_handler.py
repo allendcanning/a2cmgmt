@@ -5,8 +5,8 @@ import boto3
 #import hmac
 #import hashlib
 import base64
-#from jose import jwk, jwt
-#from jose.utils import base64url_decode
+from jose import jwk, jwt
+from jose.utils import base64url_decode
 from boto3.dynamodb.conditions import Key, Attr
 from botocore.exceptions import ClientError
 import urllib.parse
@@ -184,6 +184,60 @@ def add_dynamo_user(config,record):
     retval['message'] = e.response['Error']['Message']
   
   return retval
+
+def validate_token(config,token):
+  region = 'us-east-1'
+  user_record = {}
+  keys_url = 'https://cognito-idp.{}.amazonaws.com/{}/.well-known/jwks.json'.format(region, config['cognito_pool'])
+  response = urlopen(keys_url)
+  keys = json.loads(response.read())['keys']
+
+  headers = jwt.get_unverified_headers(token)
+  kid = headers['kid']
+  # search for the kid in the downloaded public keys
+  key_index = -1
+  for i in range(len(keys)):
+      if kid == keys[i]['kid']:
+          key_index = i
+          break
+  if key_index == -1:
+      log_error('Public key not found in jwks.json')
+      return False
+
+  # construct the public key
+  public_key = jwk.construct(keys[key_index])
+
+  # get the last two sections of the token,
+  # message and signature (encoded in base64)
+  message, encoded_signature = str(token).rsplit('.', 1)
+
+  # decode the signature
+  decoded_signature = base64url_decode(encoded_signature.encode('utf-8'))
+
+  # verify the signature
+  if not public_key.verify(message.encode("utf8"), decoded_signature):
+      log_error('Signature verification failed')
+      return 'False'
+
+  # since we passed the verification, we can now safely
+  # use the unverified claims
+  claims = jwt.get_unverified_claims(token)
+
+  log_error('Token claims = '+json.dumps(claims))
+
+  # additionally we can verify the token expiration
+  if time.time() > claims['exp']:
+      log_error('Token is expired')
+      return 'False'
+
+  if claims['client_id'] != config['cognito_client_id']:
+      log_error('Token claims not valid for this application')
+      return 'False'
+  
+  user_record['username'] = claims['username']
+  user_record['token'] = token
+
+  return user_record
 
 def check_token(config,event):
   token = 'False'
