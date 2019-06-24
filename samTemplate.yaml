@@ -332,8 +332,6 @@ Resources:
   dnsEntry:
     Type: AWS::Route53::RecordSet
     Properties: 
-      AliasTarget: 
-        AliasTarget
       Comment: DNS record for ALB
       HostedZoneName: thefirmu.org.
       Name: adminportal.thefirmu.org
