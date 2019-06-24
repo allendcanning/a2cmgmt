@@ -82,9 +82,9 @@ def start_html(config):
 
 def print_top_menu():
   content = '<h3>The Firm U Administration Portal</h3>\n'
-  content += '<a href="?action=add_user">Add User to The FirmU</a>'
-  content += '<a href="?action=rm_user">Remove User from The FirmU</a>'
-  content += '<a href="?action=email_coaches">Email Coaches</a>'
+  content += '<a href="?action=add_user">Add User to The FirmU</a><br>'
+  content += '<a href="?action=rm_user">Remove User from The FirmU</a><br>'
+  content += '<a href="?action=email_coaches">Email Coaches</a><br>'
 
   return content 
   
@@ -319,9 +319,9 @@ def mgmt_handler(event, context):
       if event['queryStringParameters'] != None:
         log_error("Query string params were not None: "+str(event['queryStringParameters']))
         if 'action' in event['queryStringParameters']:
-          if action == 'add_user':
+          if event['queryStringParameters']['action'] == 'add_user':
             content += print_add_user_form()
-          elif action == 'email_coaches':
+          elif event['queryStringParameters']['action'] == 'email_coaches':
             content += '<h3>This has not been implemented as of yet</h3>'
           else:
             content += print_top_menu()
