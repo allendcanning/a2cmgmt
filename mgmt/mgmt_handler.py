@@ -99,7 +99,7 @@ def print_rm_user_form():
 
 def print_add_user_form():
   content = '<h4>Add a user to The FirmU</h4>'
-  content += '<form method="post" action="">'
+  content += '<form method="post" action="/">'
   content += 'Enter Username: <input type="text" name="username"><p>\n'
   content += 'Enter Email Address: <input type="email" name="email"><p>\n'
   content += '<input type="hidden" name="action" value="add">\n'
