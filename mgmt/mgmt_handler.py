@@ -324,6 +324,8 @@ def mgmt_handler(event, context):
             content += '<h3>This has not been implemented as of yet</h3>'
           else:
             content += print_top_menu()
+      else:
+        content += print_top_menu()
     # Parse form params
     elif 'body' in event:
       log_error("Got form params")
