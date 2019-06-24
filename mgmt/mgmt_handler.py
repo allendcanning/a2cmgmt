@@ -330,13 +330,11 @@ def mgmt_handler(event, context):
             content += print_top_menu()
         else:
           content += print_top_menu()
-      else:
-        content += print_top_menu()
 
     # Parse form params
     if 'body' in event:
-      log_error("Got form params")
-      if bool(event['body'] and event['body'].strip()):
+      log_error("Got body params")
+      if event['body']:
         # Parse the post parameters
         postparams = event['body']
         postparams = base64.b64decode(bytes(postparams,'UTF-8')).decode('utf-8')
@@ -345,32 +343,34 @@ def mgmt_handler(event, context):
         for item in raw_record:
           user_record[item] = raw_record[item][0]
 
-      log_error('user_record = '+str(user_record))
-      if 'action' in user_record:
-        if user_record['action'] == 'add':
-          response = add_cognito_user(config,user_record)
-          if not response['status']:
-            content += "<h3>Unable to add user to cognito pool - "+response['message']+"</h3>"
-          else:
-            content += '<h3>Successfully added user to cognito pool</h3>\n'
-          response = add_dynamo_user(config,user_record)
-          if not response['status']:
-            content += "<h3>Unable to add user to dynamo db - "+response['message']+"</h3>"
-          else:
-            content += '<h3>Successfully added user to dynamo db</h3>\n'
-          content += '<p><a href="?action=add_user">Back to Add User Page</a>'
-          content += '<p><a href="">Back to Admin Page</a>'
-        elif user_record['action'] == 'rm':
-          response = rm_cognito_user(config,user_record)
-          if not response['status']:
-            content += "<h3>Unable to remove user from cognito pool - "+response['message']+"</h3>"
-          else:
-            content += '<h3>Successfully removed user from cognito pool</h3>\n'
-          content += '<p><a href="?action=rm_user">Back to Remove User Page</a>'
-          content += '<p><a href="">Back to Admin Page</a>'
-        elif user_record['action'] == 'email':
-          content += '<h4>This has not been implemented yet</h4>'
-          content += '<p><a href="">Back to Admin Page</a>'
+        log_error('user_record = '+str(user_record))
+        if 'action' in user_record:
+          if user_record['action'] == 'add':
+            response = add_cognito_user(config,user_record)
+            if not response['status']:
+              content += "<h3>Unable to add user to cognito pool - "+response['message']+"</h3>"
+            else:
+              content += '<h3>Successfully added user to cognito pool</h3>\n'
+            response = add_dynamo_user(config,user_record)
+            if not response['status']:
+              content += "<h3>Unable to add user to dynamo db - "+response['message']+"</h3>"
+            else:
+              content += '<h3>Successfully added user to dynamo db</h3>\n'
+            content += '<p><a href="?action=add_user">Back to Add User Page</a>'
+            content += '<p><a href="">Back to Admin Page</a>'
+          elif user_record['action'] == 'rm':
+            response = rm_cognito_user(config,user_record)
+            if not response['status']:
+              content += "<h3>Unable to remove user from cognito pool - "+response['message']+"</h3>"
+            else:
+              content += '<h3>Successfully removed user from cognito pool</h3>\n'
+            content += '<p><a href="?action=rm_user">Back to Remove User Page</a>'
+            content += '<p><a href="">Back to Admin Page</a>'
+          elif user_record['action'] == 'email':
+            content += '<h4>This has not been implemented yet</h4>'
+            content += '<p><a href="">Back to Admin Page</a>'
+        else:
+          content += print_top_menu()
       else:
         content += print_top_menu()
     else:
