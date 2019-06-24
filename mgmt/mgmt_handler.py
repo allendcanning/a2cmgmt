@@ -317,60 +317,55 @@ def mgmt_handler(event, context):
   else:
     token = auth_record['token']
 
-    if 'queryStringParameters' in event:
-      log_error("Got query string params")
-      if event['queryStringParameters']:
-        log_error("Query string params were not None: "+str(event['queryStringParameters']))
-        if 'action' in event['queryStringParameters']:
-          if event['queryStringParameters']['action'] == 'add_user':
-            content += print_add_user_form()
-          elif event['queryStringParameters']['action'] == 'email_coaches':
-            content += '<h3>This has not been implemented as of yet</h3>'
-          else:
-            content += print_top_menu()
+    if event['queryStringParameters']:
+      log_error("Query string params were not None: "+str(event['queryStringParameters']))
+      if 'action' in event['queryStringParameters']:
+        if event['queryStringParameters']['action'] == 'add_user':
+          content += print_add_user_form()
+        elif event['queryStringParameters']['action'] == 'rm_user':
+          content += print_rm_user_form()
+        elif event['queryStringParameters']['action'] == 'email_coaches':
+          content += '<h3>This has not been implemented as of yet</h3>'
         else:
           content += print_top_menu()
-
+      else:
+        content += print_top_menu()
     # Parse form params
-    if 'body' in event:
-      log_error("Got body params")
-      if event['body']:
-        # Parse the post parameters
-        postparams = event['body']
-        postparams = base64.b64decode(bytes(postparams,'UTF-8')).decode('utf-8')
-        log_error('Got post params = '+postparams)
-        raw_record = urllib.parse.parse_qs(postparams)
-        for item in raw_record:
-          user_record[item] = raw_record[item][0]
+    elif event['body']:
+      # Parse the post parameters
+      postparams = event['body']
+      postparams = base64.b64decode(bytes(postparams,'UTF-8')).decode('utf-8')
+      log_error('Got post params = '+postparams)
+      raw_record = urllib.parse.parse_qs(postparams)
+      for item in raw_record:
+        user_record[item] = raw_record[item][0]
 
-        log_error('user_record = '+str(user_record))
-        if 'action' in user_record:
-          if user_record['action'] == 'add':
-            response = add_cognito_user(config,user_record)
-            if not response['status']:
-              content += "<h3>Unable to add user to cognito pool - "+response['message']+"</h3>"
-            else:
-              content += '<h3>Successfully added user to cognito pool</h3>\n'
-            response = add_dynamo_user(config,user_record)
-            if not response['status']:
-              content += "<h3>Unable to add user to dynamo db - "+response['message']+"</h3>"
-            else:
-              content += '<h3>Successfully added user to dynamo db</h3>\n'
-            content += '<p><a href="?action=add_user">Back to Add User Page</a>'
-            content += '<p><a href="">Back to Admin Page</a>'
-          elif user_record['action'] == 'rm':
-            response = rm_cognito_user(config,user_record)
-            if not response['status']:
-              content += "<h3>Unable to remove user from cognito pool - "+response['message']+"</h3>"
-            else:
-              content += '<h3>Successfully removed user from cognito pool</h3>\n'
-            content += '<p><a href="?action=rm_user">Back to Remove User Page</a>'
-            content += '<p><a href="">Back to Admin Page</a>'
-          elif user_record['action'] == 'email':
-            content += '<h4>This has not been implemented yet</h4>'
-            content += '<p><a href="">Back to Admin Page</a>'
-        else:
-          content += print_top_menu()
+      log_error('user_record = '+str(user_record))
+      if 'action' in user_record:
+        if user_record['action'] == 'add':
+          response = add_cognito_user(config,user_record)
+          if not response['status']:
+            content += "<h3>Unable to add user to cognito pool - "+response['message']+"</h3>"
+          else:
+            content += '<h3>Successfully added user to cognito pool</h3>\n'
+          response = add_dynamo_user(config,user_record)
+          if not response['status']:
+            content += "<h3>Unable to add user to dynamo db - "+response['message']+"</h3>"
+          else:
+            content += '<h3>Successfully added user to dynamo db</h3>\n'
+          content += '<p><a href="?action=add_user">Back to Add User Page</a>'
+          content += '<p><a href="">Back to Admin Page</a>'
+        elif user_record['action'] == 'rm':
+          response = rm_cognito_user(config,user_record)
+          if not response['status']:
+            content += "<h3>Unable to remove user from cognito pool - "+response['message']+"</h3>"
+          else:
+            content += '<h3>Successfully removed user from cognito pool</h3>\n'
+          content += '<p><a href="?action=rm_user">Back to Remove User Page</a>'
+          content += '<p><a href="">Back to Admin Page</a>'
+        elif user_record['action'] == 'email':
+          content += '<h4>This has not been implemented yet</h4>'
+          content += '<p><a href="">Back to Admin Page</a>'
       else:
         content += print_top_menu()
     else:
