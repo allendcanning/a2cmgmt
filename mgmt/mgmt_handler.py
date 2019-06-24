@@ -317,6 +317,7 @@ def mgmt_handler(event, context):
     if 'queryStringParameters' in event:
       log_error("Got query string params")
       if event['queryStringParameters'] != None:
+        log_error("Query string params were not None: "+event['queryStringParameters'])
         if 'action' in event['queryStringParameters']:
           if action == 'add_user':
             content += print_add_user_form()
@@ -324,6 +325,8 @@ def mgmt_handler(event, context):
             content += '<h3>This has not been implemented as of yet</h3>'
           else:
             content += print_top_menu()
+        else:
+          content += print_top_menu()
       else:
         content += print_top_menu()
     # Parse form params
