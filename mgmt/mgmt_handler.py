@@ -76,7 +76,7 @@ def start_html(config):
   css = '<link rel="stylesheet" href="https://s3.amazonaws.com/'+config['s3_html_bucket']+'/css/a2c.css" type="text/css" />'
   content = "<html><head><title>A2C Portal</title>\n"
   content += css+'</head>'
-  content += "<body><h3>A2C Portal</h3>"
+  content += "<body>"
 
   return content
 
@@ -90,7 +90,7 @@ def print_top_menu():
   
 def print_rm_user_form():
   content = '<h3>The Firm U Remove a User page</h3>\n'
-  content = '<form method="post" action="">'
+  content += '<form method="post" action="">'
   content += 'Enter Username: <input type="text" name="username"><p>\n'
   content += '<input type="hidden" name="action" value="rm">\n'
   content += '<input type="submit" name="Submit">'
@@ -315,6 +315,7 @@ def mgmt_handler(event, context):
     token = auth_record['token']
 
     if 'queryStringParameters' in event:
+      log_error("Got query string params")
       if event['queryStringParameters'] != None:
         if 'action' in event['queryStringParameters']:
           if action == 'add_user':
@@ -325,6 +326,7 @@ def mgmt_handler(event, context):
             content += print_top_menu()
     # Parse form params
     elif 'body' in event:
+      log_error("Got form params")
       if bool(event['body'] and event['body'].strip()):
         # Parse the post parameters
         postparams = event['body']
