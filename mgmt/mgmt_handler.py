@@ -188,9 +188,10 @@ def add_dynamo_user(config,record):
 def validate_token(config,token):
   region = 'us-east-1'
   user_record = {}
-  keys_url = 'https://cognito-idp.{}.amazonaws.com/{}/.well-known/jwks.json'.format(region, config['cognito_pool'])
+  keys_url = 'https://cognito-idp.{}.amazonaws.com/{}/.well-known/jwks.json'.format(region, config['admin_cognito_pool'])
   response = urlopen(keys_url)
   keys = json.loads(response.read())['keys']
+  user_record['token'] = 'False'
 
   headers = jwt.get_unverified_headers(token)
   kid = headers['kid']
@@ -202,7 +203,7 @@ def validate_token(config,token):
           break
   if key_index == -1:
       log_error('Public key not found in jwks.json')
-      return False
+      return user_record
 
   # construct the public key
   public_key = jwk.construct(keys[key_index])
@@ -217,7 +218,7 @@ def validate_token(config,token):
   # verify the signature
   if not public_key.verify(message.encode("utf8"), decoded_signature):
       log_error('Signature verification failed')
-      return 'False'
+      return user_record
 
   # since we passed the verification, we can now safely
   # use the unverified claims
@@ -228,11 +229,11 @@ def validate_token(config,token):
   # additionally we can verify the token expiration
   if time.time() > claims['exp']:
       log_error('Token is expired')
-      return 'False'
+      return user_record
 
-  if claims['client_id'] != config['cognito_client_id']:
+  if claims['client_id'] != config['admin_cognito_client_id']:
       log_error('Token claims not valid for this application')
-      return 'False'
+      return user_record
   
   user_record['username'] = claims['username']
   user_record['token'] = token
