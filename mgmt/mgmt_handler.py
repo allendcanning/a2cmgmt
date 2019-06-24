@@ -319,7 +319,7 @@ def mgmt_handler(event, context):
 
     if 'queryStringParameters' in event:
       log_error("Got query string params")
-      if event['queryStringParameters'] != None:
+      if event['queryStringParameters']:
         log_error("Query string params were not None: "+str(event['queryStringParameters']))
         if 'action' in event['queryStringParameters']:
           if event['queryStringParameters']['action'] == 'add_user':
@@ -332,8 +332,9 @@ def mgmt_handler(event, context):
           content += print_top_menu()
       else:
         content += print_top_menu()
+
     # Parse form params
-    elif 'body' in event:
+    if 'body' in event:
       log_error("Got form params")
       if bool(event['body'] and event['body'].strip()):
         # Parse the post parameters
