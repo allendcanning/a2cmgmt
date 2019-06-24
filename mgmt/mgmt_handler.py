@@ -317,7 +317,7 @@ def mgmt_handler(event, context):
     if 'queryStringParameters' in event:
       log_error("Got query string params")
       if event['queryStringParameters'] != None:
-        log_error("Query string params were not None: "+event['queryStringParameters'])
+        log_error("Query string params were not None: "+str(event['queryStringParameters']))
         if 'action' in event['queryStringParameters']:
           if action == 'add_user':
             content += print_add_user_form()
