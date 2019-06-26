@@ -180,7 +180,7 @@ Resources:
   theFirmuAdminCognitoClient:
     Type: AWS::Cognito::UserPoolClient
     Properties: 
-      ClientName: mgmt
+      ClientName: admin
       ExplicitAuthFlows: 
         - ADMIN_NO_SRP_AUTH
       GenerateSecret: True

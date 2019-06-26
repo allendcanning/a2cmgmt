@@ -66,6 +66,10 @@ def get_config_data(environment):
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   config['cognito_auth_url'] =response['Parameter']['Value'] 
 
+  ssmpath="/a2c/"+environment+"/tmpl_table_name"
+  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+  config['tmpl_table_name'] =response['Parameter']['Value'] 
+  
   for item in config:
     log_error("Got config key = "+item+" value = "+config[item])
 
@@ -84,6 +88,7 @@ def print_top_menu():
   content = '<h3>The Firm U Administration Portal</h3>\n'
   content += '<a href="?action=add_user">Add User to The FirmU</a><br>'
   content += '<a href="?action=rm_user">Remove User from The FirmU</a><br>'
+  content += '<a href="?action=email_tmpl">Edit Email Templates</a><br>'
   content += '<a href="?action=email_coaches">Email Coaches</a><br>'
 
   return content 
@@ -109,6 +114,39 @@ def print_add_user_form():
 
   return content
 
+def save_email_template(config,name,template):
+  # Write template to dynamo
+
+  return True
+
+def print_email_templates(config,name):
+  # get templates from dynamo
+  t = dynamodb.Table(config['tmpl_table_name'])
+  tmpls = t.scan()
+
+  content = '<form>\nSelect a template to edit: <select name="tmpl">'
+
+  # display template list
+  for tmpl in tmpls['Items']:
+    content += '<option value='+tmpl['tmpl_name']
+    if tmpl['tmpl_name'] == name:
+      content += ' selected '
+      template_data = tmpl['template']
+    content += '>'+tmpl['tmpl_name']+'</option>\n'
+  content += '</select>'
+
+  # load default template into text area for editing
+  content += '<textarea rows="25" cols="50" name="template">'
+  content += template_data
+  content += '</textarea>'
+
+  content += '<input type="hidden" name="action" value="update_tmpl">\n'
+  content += '<input type="submit" name="Submit">'
+  content += '<input type="reset">'
+  content += '</form>'
+
+  return True
+  
 def add_cognito_user(config,record):
   cognito = boto3.client('cognito-idp')
   retval = {}
@@ -324,6 +362,12 @@ def mgmt_handler(event, context):
           content += print_add_user_form()
         elif event['queryStringParameters']['action'] == 'rm_user':
           content += print_rm_user_form()
+        elif event['queryStringParameters']['action'] == 'email_tmpl':
+          if 'tmpl' in event['queryStringParameters']:
+            tmpl = event['queryStringParameters']['tmpl']
+          else:
+            tmpl = "default"
+          content += print_email_templates(config,tmpl)
         elif event['queryStringParameters']['action'] == 'email_coaches':
           content += '<h3>This has not been implemented as of yet</h3>'
         else:
