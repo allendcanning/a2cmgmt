@@ -145,6 +145,7 @@ Resources:
       UserPoolName: "thefirmu-admin"
   theFirmuAdminCognitoClientSettings:
     Type: 'Custom::CognitoUserPoolClientSettings'
+    DependsOn: theFirmuAdminCognitoClient
     Properties:
       ServiceToken: !GetAtt CloudFormationCognitoUserPoolClientSettings.Arn
       UserPoolId: !Ref theFirmuAdminCognitoPool
