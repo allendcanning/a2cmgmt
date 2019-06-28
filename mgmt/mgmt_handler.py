@@ -155,7 +155,7 @@ def print_email_templates(config,name):
   content += '<input type="reset">'
   content += '</form>'
 
-  return True
+  return content
   
 def add_cognito_user(config,record):
   cognito = boto3.client('cognito-idp')
