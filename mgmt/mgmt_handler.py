@@ -126,21 +126,31 @@ def print_email_templates(config,name):
 
   content = '<form>\nSelect a template to edit: <select name="tmpl">'
 
+  default = {}
   # display template list
   for tmpl in tmpls['Items']:
     content += '<option value='+tmpl['tmpl_name']
     if tmpl['tmpl_name'] == name:
       content += ' selected '
-      template_data = tmpl['template']
+      default['tmpl_name'] = name
+      default['subject'] = tmpl['SubjectPart']
+      default['html'] = tmpl['HtmlPart']
+      default['text'] = tmpl['TextPart']
     content += '>'+tmpl['tmpl_name']+'</option>\n'
   content += '</select>'
 
-  # load default template into text area for editing
-  content += '<textarea rows="25" cols="50" name="template">'
-  content += template_data
-  content += '</textarea>'
+  # load default template into text area for editing>'
+  content += 'Subject: <input type="text" name="subject" size="40" value="'+default['subject']+'"><br>\n'
+  content += 'HTML message: <textarea rows="25" cols="50" name="html_tmpl">'
+  content += default['html']
+  content += '</textarea><pr>\n'
 
-  content += '<input type="hidden" name="action" value="update_tmpl">\n'
+  content += 'Text message: <textarea rows="25" cols="50" name="text_tmpl">'
+  content += default['text']
+  content += '</textarea><pr>\n'
+
+  content += '<input type="hidden" name="tmpl_name" value="'+default['tmpl_name']+'"><br>\n'
+  content += '<input type="hidden" name="action" value="update_tmpl"><br>\n'
   content += '<input type="submit" name="Submit">'
   content += '<input type="reset">'
   content += '</form>'
