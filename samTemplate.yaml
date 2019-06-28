@@ -178,6 +178,19 @@ Resources:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
       TableName: "thefirmu_user_info"
+  theFirmuTmplDynamoDBTable:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: "tmpl_name"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "tmpl_name"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      TableName: "thefirmu_tmpl_info"
   theFirmuAdminCognitoClient:
     Type: AWS::Cognito::UserPoolClient
     Properties: 
@@ -217,6 +230,12 @@ Resources:
       Name: /a2c/dev/table_name
       Type: String
       Value: !Ref theFirmuDynamoDBTable
+  dynamoDBTmplTableNameSSM:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: /a2c/dev/tmpl_table_name
+      Type: String
+      Value: !Ref theFirmuTmplDynamoDBTable
   mgmtPortalDynamoPolicy:
     Type: AWS::IAM::Policy
     Properties:
@@ -233,7 +252,7 @@ Resources:
                 "dynamodb:Query",
                 "dynamodb:UpdateItem"
           ]
-          Resource: !GetAtt [theFirmuDynamoDBTable,'Arn']
+          Resource: [ !GetAtt [theFirmuDynamoDBTable,'Arn'], !GetAtt theFirmuTmplDynamoDBTable.Arn ]
       Roles:
         - !Ref "mgmtPortalRole"
   mgmtPortalSSMPolicy:
