@@ -143,7 +143,7 @@ def print_email_templates(config,name):
   log_error("Got name: "+str(name))
   log_error("Got SES templates: "+str(tmpls))
 
-  if name:
+  if tmpls['TemplatesMetadata'] and name:
     # Add AJAX to get template info when the template name is changed
     content = '<form method="POST" action="/">\nSelect a template to edit: <select name="TemplateName">'
 
