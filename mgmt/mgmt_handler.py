@@ -84,7 +84,7 @@ def start_html(config):
   content += js+'\n'
   content += '</head>\n'
   content += '<body>'
-  content +- '<div id="adminportal">\n'
+  content += '<div id="adminportal">\n'
 
   return content
 
