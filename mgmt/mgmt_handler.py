@@ -415,23 +415,23 @@ def mgmt_handler(event, context):
       if 'action' in event['queryStringParameters']:
         if event['queryStringParameters']['action'] == 'add_user':
           content += print_add_user_form()
-          content += '<p><a href="">Back to Admin Page</a>'
+          content += '<p><a href="/">Back to Admin Page</a>'
         elif event['queryStringParameters']['action'] == 'rm_user':
           content += print_rm_user_form()
-          content += '<p><a href="">Back to Admin Page</a>'
+          content += '<p><a href="/">Back to Admin Page</a>'
         elif event['queryStringParameters']['action'] == 'email_tmpl':
           if 'tmpl' in event['queryStringParameters']:
             tmpl = event['queryStringParameters']['tmpl']
           else:
             tmpl = "default"
           content += print_email_templates(config,tmpl)
-          content += '<p><a href="">Back to Admin Page</a>'
+          content += '<p><a href="/">Back to Admin Page</a>'
         elif event['queryStringParameters']['action'] == 'add_tmpl':
           content += print_email_templates(config,"")
-          content += '<p><a href="">Back to Admin Page</a>'
+          content += '<p><a href="/">Back to Admin Page</a>'
         elif event['queryStringParameters']['action'] == 'email_coaches':
           content += '<h3>This has not been implemented as of yet</h3>'
-          content += '<p><a href="">Back to Admin Page</a>'
+          content += '<p><a href="/">Back to Admin Page</a>'
         else:
           content += print_top_menu()
       else:
@@ -461,7 +461,7 @@ def mgmt_handler(event, context):
           else:
             content += '<h3>Successfully added user to dynamo db</h3>\n'
           content += '<p><a href="?action=add_user">Back to Add User Page</a>'
-          content += '<p><a href="">Back to Admin Page</a>'
+          content += '<p><a href="/">Back to Admin Page</a>'
         elif user_record['action'] == 'rm':
           response = rm_cognito_user(config,user_record)
           if not response['status']:
@@ -469,7 +469,7 @@ def mgmt_handler(event, context):
           else:
             content += '<h3>Successfully removed user from cognito pool</h3>\n'
           content += '<p><a href="?action=rm_user">Back to Remove User Page</a>'
-          content += '<p><a href="">Back to Admin Page</a>'
+          content += '<p><a href="/">Back to Admin Page</a>'
         elif user_record['action'] == 'add_tmpl':
           del user_record['action']
           response = add_email_template(config,user_record)
@@ -478,7 +478,7 @@ def mgmt_handler(event, context):
           else:
             content += "<h3>Successfully updated email template<h3>\n"
           content += '<p><a href="?action=email_tmpl">Back to Edit Template</a>'
-          content += '<p><a href="">Back to Admin Page</a>'
+          content += '<p><a href="/">Back to Admin Page</a>'
         elif user_record['action'] == 'update_tmpl':
           del user_record['action']
           response = update_email_template(config,user_record)
@@ -487,10 +487,10 @@ def mgmt_handler(event, context):
           else:
             content += "<h3>Successfully updated email template<h3>\n"
           content += '<p><a href="?action=email_tmpl">Back to Edit Template</a>'
-          content += '<p><a href="">Back to Admin Page</a>'
+          content += '<p><a href="/">Back to Admin Page</a>'
         elif user_record['action'] == 'email':
           content += '<h4>This has not been implemented yet</h4>'
-          content += '<p><a href="">Back to Admin Page</a>'
+          content += '<p><a href="/">Back to Admin Page</a>'
       else:
         content += print_top_menu()
     else:
