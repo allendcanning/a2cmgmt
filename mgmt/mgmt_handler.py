@@ -172,7 +172,7 @@ def print_email_templates(config,name):
         default['SubjectPart'] = template['Template']['SubjectPart']
         default['HtmlPart'] = template['Template']['HtmlPart']
         default['TextPart'] = template['Template']['TextPart']
-      content += '>'+template['Template']['TemplateName']+'</option>\n'
+      content += '>'+tmpl['Name']+'</option>\n'
     content += '</select>'
 
     # load default template into text area for editing>'
@@ -415,18 +415,23 @@ def mgmt_handler(event, context):
       if 'action' in event['queryStringParameters']:
         if event['queryStringParameters']['action'] == 'add_user':
           content += print_add_user_form()
+          content += '<p><a href="">Back to Admin Page</a>'
         elif event['queryStringParameters']['action'] == 'rm_user':
           content += print_rm_user_form()
+          content += '<p><a href="">Back to Admin Page</a>'
         elif event['queryStringParameters']['action'] == 'email_tmpl':
           if 'tmpl' in event['queryStringParameters']:
             tmpl = event['queryStringParameters']['tmpl']
           else:
             tmpl = "default"
           content += print_email_templates(config,tmpl)
+          content += '<p><a href="">Back to Admin Page</a>'
         elif event['queryStringParameters']['action'] == 'add_tmpl':
           content += print_email_templates(config,"")
+          content += '<p><a href="">Back to Admin Page</a>'
         elif event['queryStringParameters']['action'] == 'email_coaches':
           content += '<h3>This has not been implemented as of yet</h3>'
+          content += '<p><a href="">Back to Admin Page</a>'
         else:
           content += print_top_menu()
       else:
