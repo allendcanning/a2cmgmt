@@ -260,20 +260,20 @@ Resources:
         - !Ref "mgmtPortalRole"
   mgmtPortalSESPolicy:
    Type: AWS::IAM::Policy
-    Properties:
-      PolicyName: "thefirmu.ses.allow"
-      PolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-        -
-          Effect: Allow
-          Action: [ 'ses:ListTemplates',
-                    'ses:CreateTemplate',
-                    'ses:GetTemplates'
-          ]
-          Resource: '*'
-      Roles:
-        - !Ref "mgmtPortalRole"
+   Properties:
+     PolicyName: "thefirmu.ses.allow"
+     PolicyDocument:
+       Version: "2012-10-17"
+       Statement:
+       -
+         Effect: Allow
+         Action: [ 'ses:ListTemplates',
+                   'ses:CreateTemplate',
+                   'ses:GetTemplates'
+         ]
+         Resource: '*'
+     Roles:
+       - !Ref "mgmtPortalRole"
   mgmtPortalSSMPolicy:
     Type: AWS::IAM::Policy
     Properties:
