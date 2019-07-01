@@ -116,6 +116,7 @@ def print_add_user_form():
   return content
 
 def add_email_template(config,template):
+  retval = {}
   client = boto3.client('ses')
   try:
     response = client.create_template(Template=template)
@@ -130,6 +131,7 @@ def add_email_template(config,template):
   return retval
 
 def update_email_template(config,template):
+  retval = {}
   client = boto3.client('ses')
   try:
     response = client.update_template(Template=template)
