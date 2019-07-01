@@ -168,11 +168,11 @@ def print_email_templates(config,name):
       if tmpl['Name'] == name:
         template = client.get_template(TemplateName=tmpl['Name'])
         content += ' selected '
-        default['TemplateName'] = template['TemplateName']
-        default['SubjectPart'] = template['SubjectPart']
-        default['HtmlPart'] = template['HtmlPart']
-        default['TextPart'] = template['TextPart']
-      content += '>'+template['TemplateName']+'</option>\n'
+        default['TemplateName'] = template['Template']['TemplateName']
+        default['SubjectPart'] = template['Template']['SubjectPart']
+        default['HtmlPart'] = template['Template']['HtmlPart']
+        default['TextPart'] = template['Template']['TextPart']
+      content += '>'+template['Template']['TemplateName']+'</option>\n'
     content += '</select>'
 
     # load default template into text area for editing>'
