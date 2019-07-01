@@ -119,41 +119,67 @@ def save_email_template(config,name,template):
 
   return True
 
+def update_email_template(config,template):
+ # get templates from SES
+  client = boto3.client('ses')
+
+  try:
+    response = client.update_template(Template=template)
+    retval['status'] = True
+    retval['message'] = 'Successfully updates email template'
+  except ClientError as e:
+    log_error("response = "+json.dumps(e.response))
+    log_error("Error is "+e.response['Error']['Message'])
+    retval['status'] = False
+    retval['message'] = e.response['Error']['Message']
+
+  return retval
+
 def print_email_templates(config,name):
-  # get templates from dynamo
-  t = dynamodb.Table(config['tmpl_table_name'])
-  tmpls = t.scan()
+  if name:
+    client = boto3.client('ses')
+    tmpls = client.list_templates()
+    # Add AJAX to get template info when the template name is changed
+    content = '<form method="POST" action="/">\nSelect a template to edit: <select name="TemplateName">'
 
-  content = '<form>\nSelect a template to edit: <select name="tmpl">'
+    default = {}
+    # display template list
+    for tmpl in tmpls['TemplatesMetadata']:
+      content += '<option value='+tmpl['Name']
+      if tmpl['Name'] == name:
+        template = client.get_template(TemplateName=tmpl['Name'])
+        content += ' selected '
+        default['TemplateName'] = template['TemplateName']
+        default['SubjectPart'] = template['SubjectPart']
+        default['HtmlPart'] = template['HtmlPart']
+        default['TextPart'] = template['TextPart']
+      content += '>'+template['TemplateName']+'</option>\n'
+    content += '</select>'
 
-  default = {}
-  # display template list
-  for tmpl in tmpls['Items']:
-    content += '<option value='+tmpl['tmpl_name']
-    if tmpl['tmpl_name'] == name:
-      content += ' selected '
-      default['tmpl_name'] = name
-      default['subject'] = tmpl['SubjectPart']
-      default['html'] = tmpl['HtmlPart']
-      default['text'] = tmpl['TextPart']
-    content += '>'+tmpl['tmpl_name']+'</option>\n'
-  content += '</select>'
+    # load default template into text area for editing>'
+    content += '<br>Subject: <input type="text" name="SubjectPart" size="40" value="'+default['SubjectPart']+'"><br>\n'
+    content += 'HTML message: <textarea rows="25" cols="50" name="HtmlPart">'
+    content += default['HtmlPart']
+    content += '</textarea><p>\n'
 
-  # load default template into text area for editing>'
-  content += 'Subject: <input type="text" name="subject" size="40" value="'+default['subject']+'"><br>\n'
-  content += 'HTML message: <textarea rows="25" cols="50" name="html_tmpl">'
-  content += default['html']
-  content += '</textarea><pr>\n'
+    content += 'Text message: <textarea rows="25" cols="50" name="TextPart">'
+    content += default['TextPart']
+    content += '</textarea><p>\n'
 
-  content += 'Text message: <textarea rows="25" cols="50" name="text_tmpl">'
-  content += default['text']
-  content += '</textarea><pr>\n'
+    content += '<input type="hidden" name="action" value="update_tmpl"><br>\n'
+    content += '<input type="submit" name="Submit">'
+    content += '<input type="reset">'
+    content += '</form>'
+  else:
+    content = '<form method="POST" action="/">Enter template name: <input type="text" name="TemplateName">'
+    content += '<br>Subject: <input type="text" name="SubjectPart" size="40"><br>\n'
+    content += 'HTML message: <textarea rows="25" cols="50" name="HtmlPart"></textarea><p>\n'
 
-  content += '<input type="hidden" name="tmpl_name" value="'+default['tmpl_name']+'"><br>\n'
-  content += '<input type="hidden" name="action" value="update_tmpl"><br>\n'
-  content += '<input type="submit" name="Submit">'
-  content += '<input type="reset">'
-  content += '</form>'
+    content += 'Text message: <textarea rows="25" cols="50" name="TextPart"></textarea><p>\n' 
+    content += '<input type="hidden" name="action" value="add_tmpl"><br>\n'
+    content += '<input type="submit" name="Submit">'
+    content += '<input type="reset">'
+    content += '</form>'
 
   return content
   
@@ -378,6 +404,8 @@ def mgmt_handler(event, context):
           else:
             tmpl = "default"
           content += print_email_templates(config,tmpl)
+        elif event['queryStringParameters']['action'] == 'add_tmpl':
+          content += print_email_templates(config,"")
         elif event['queryStringParameters']['action'] == 'email_coaches':
           content += '<h3>This has not been implemented as of yet</h3>'
         else:
@@ -416,6 +444,15 @@ def mgmt_handler(event, context):
           else:
             content += '<h3>Successfully removed user from cognito pool</h3>\n'
           content += '<p><a href="?action=rm_user">Back to Remove User Page</a>'
+          content += '<p><a href="">Back to Admin Page</a>'
+        elif user_record['action'] == 'update_tmpl':
+          del user_record['action']
+          response = update_email_tmpl(config,user_record)
+          if not response['status']:
+            content += "<h3>Unable to update template - "+response['message']+"</h3>\n"
+          else:
+            content += "<h3>Successfully updated email template<h3>\n"
+          content += '<p><a href="?action=email_tmpl">Back to Edit Template</a>'
           content += '<p><a href="">Back to Admin Page</a>'
         elif user_record['action'] == 'email':
           content += '<h4>This has not been implemented yet</h4>'

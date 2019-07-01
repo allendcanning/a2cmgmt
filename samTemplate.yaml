@@ -15,6 +15,9 @@ Parameters:
   AdminContentUrl:
     Type: String
     Default: "https://adminportal.thefirmu.org"
+  Environment:
+    Type: String 
+    Default: "dev"
 Mappings:
   VPC2Subnet:
     vpc-729d3814:
@@ -203,37 +206,37 @@ Resources:
   cognitoAdminPoolSSM:
     Type: AWS::SSM::Parameter
     Properties: 
-      Name: /a2c/dev/admin_cognito_pool
+      Name: !Join ['',['/a2c/', !Ref Environment, '/admin_cognito_pool']]
       Type: String
       Value: !Ref theFirmuAdminCognitoPool
   cognitoAdminClientIdSSM:
     Type: AWS::SSM::Parameter
     Properties: 
-      Name: /a2c/dev/admin_cognito_client_id
+      Name: !Join ['',['/a2c/', !Ref Environment, '/admin_cognito_client_id']]
       Type: String
       Value: !Ref theFirmuAdminCognitoClient
   cognitoAdminAuthUrlSSM:
     Type: AWS::SSM::Parameter
     Properties:
-      Name: /a2c/dev/admin_cognito_auth_url
+      Name: !Join ['',['/a2c/', !Ref Environment, '/admin_cognito_auth_url']]
       Type: String
       Value: !Join ['',['https://',!Ref AdminCognitoDomain,'.auth.us-east-1.amazoncognito.com/oath2/']]
   cognitoAdminContentUrlSSM:
     Type: AWS::SSM::Parameter
     Properties:
-      Name: /a2c/dev/admin_content_url
+      Name: !Join ['',['/a2c/', !Ref Environment, '/admin_content_url']]
       Type: String
       Value: !Join ['',[!Ref AdminContentUrl,'/']]
   dynamoDBTableNameSSM:
     Type: AWS::SSM::Parameter
     Properties: 
-      Name: /a2c/dev/table_name
+      Name: !Join ['',['/a2c/', !Ref Environment, '/table_name']]
       Type: String
       Value: !Ref theFirmuDynamoDBTable
   dynamoDBTmplTableNameSSM:
     Type: AWS::SSM::Parameter
     Properties: 
-      Name: /a2c/dev/tmpl_table_name
+      Name: !Join ['',['/a2c/', !Ref Environment, '/tmpl_table_name']]
       Type: String
       Value: !Ref theFirmuTmplDynamoDBTable
   mgmtPortalDynamoPolicy:
