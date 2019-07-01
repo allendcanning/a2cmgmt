@@ -77,10 +77,14 @@ def get_config_data(environment):
 
 def start_html(config):
   # Build HTML content
-  css = '<link rel="stylesheet" href="https://s3.amazonaws.com/'+config['s3_html_bucket']+'/css/a2c.css" type="text/css" />'
+  css = '<link rel="stylesheet" href="https://s3.amazonaws.com/'+config['s3_html_bucket']+'/admin/css/a2c.css" type="text/css" />'
+  js = '<script src="https://s3.amazonaws.com/'+config['s3_html_bucket']+'/admin/javascript/thefirmu.jss"></script>'
   content = "<html><head><title>A2C Portal</title>\n"
-  content += css+'</head>'
-  content += "<body>"
+  content += css+'\n'
+  content += js+'\n'
+  content += '</head>\n'
+  content += '<body>'
+  content +- '<div id="adminportal">\n'
 
   return content
 
@@ -159,7 +163,7 @@ def print_email_templates(config,name):
 
   if tmpls['TemplatesMetadata'] and name:
     # Add AJAX to get template info when the template name is changed
-    content += '<form method="POST" action="/">\nSelect a template to edit: <select name="TemplateName">'
+    content += '<form method="POST" action="/">\nSelect a template to edit: <select onChange="loadEmailTemplate(this.value)" name="TemplateName">'
 
     default = {}
     # display template list
@@ -496,7 +500,7 @@ def mgmt_handler(event, context):
     else:
       content += print_top_menu()
 
-    content += "</body></html>"
+    content += "</div></body></html>"
 
   return {
     'statusCode': 200,

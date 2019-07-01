@@ -1,0 +1,68 @@
+body {
+  background: #DDE8DD;
+}
+table {
+  width: 95%;
+  background-color: #1d2300;
+}
+.topTable{
+  width: 95%;
+  margin: -15px 0px;
+}
+.defTable {
+  width: 100%;
+  // border: 1px solid #999999;
+}
+.areaHead {
+  background-color: #000000;
+  text-align: left;
+  color: #cccccc;
+  margin: -2px -5px;
+}
+.header {
+  // background-color: #1d2300;
+  font-weight: bold;
+  color: #cccccc;
+}
+.title {
+  background-color: #2b1d00;
+  //background-color: #441B10;
+  font-weight: bold;
+  width: 95%;
+  padding: 10px 0px;
+  color: #cccccc;
+}
+.data {
+  border: 1px solid #999999;
+  padding: 3px 10px;
+  color: #cccccc;
+}
+.athletedata {
+  border: 1px solid #999999;
+  padding: 3px 10px;
+  -webkit-column-count: 1;
+}
+.right {
+  vertical-align: top;
+  text-align: right; 
+}
+.athletic {
+  column-span: 2;
+}
+.athleticstats {
+  rows: 5;
+  columns: 40;
+}
+.button {
+  //background-color: #E4F13A; /* Yellow */
+  background-color: #F19F2F; /* Orange */
+  border: none;
+  color: #000000;
+  border-radius: 4px;
+  padding: 5px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 10px 0px 0px 0px;
+}
