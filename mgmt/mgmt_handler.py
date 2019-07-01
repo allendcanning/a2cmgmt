@@ -465,7 +465,7 @@ def mgmt_handler(event, context):
           content += '<p><a href="">Back to Admin Page</a>'
         elif user_record['action'] == 'add_tmpl':
           del user_record['action']
-          response = add_email_tmpl(config,user_record)
+          response = add_email_template(config,user_record)
           if not response['status']:
             content += "<h3>Unable to update template - "+response['message']+"</h3>\n"
           else:
@@ -474,7 +474,7 @@ def mgmt_handler(event, context):
           content += '<p><a href="">Back to Admin Page</a>'
         elif user_record['action'] == 'update_tmpl':
           del user_record['action']
-          response = update_email_tmpl(config,user_record)
+          response = update_email_template(config,user_record)
           if not response['status']:
             content += "<h3>Unable to update template - "+response['message']+"</h3>\n"
           else:
