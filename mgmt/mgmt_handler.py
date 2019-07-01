@@ -115,15 +115,22 @@ def print_add_user_form():
 
   return content
 
-def save_email_template(config,name,template):
-  # Write template to dynamo
+def add_email_template(config,template):
+  client = boto3.client('ses')
+  try:
+    response = client.create_template(Template=template)
+    retval['status'] = True
+    retval['message'] = 'Successfully updates email template'
+  except ClientError as e:
+    log_error("response = "+json.dumps(e.response))
+    log_error("Error is "+e.response['Error']['Message'])
+    retval['status'] = False
+    retval['message'] = e.response['Error']['Message']
 
-  return True
+  return retval
 
 def update_email_template(config,template):
- # get templates from SES
   client = boto3.client('ses')
-
   try:
     response = client.update_template(Template=template)
     retval['status'] = True
@@ -143,9 +150,14 @@ def print_email_templates(config,name):
   log_error("Got name: "+str(name))
   log_error("Got SES templates: "+str(tmpls))
 
+  content = '<h3>The FirmU Email template editing program</h3>'
+  content += '<p>Make sure you fill out both the HTML and Text sections, as both will be sent out to the recipients. '
+  content += 'You can use variables to be sent in your email by surrounding them with {{}}.  The following variables are available:<br>'
+  content += '{{coachname}}<br>{{athletename}}<br>{{sport}}'
+
   if tmpls['TemplatesMetadata'] and name:
     # Add AJAX to get template info when the template name is changed
-    content = '<form method="POST" action="/">\nSelect a template to edit: <select name="TemplateName">'
+    content += '<form method="POST" action="/">\nSelect a template to edit: <select name="TemplateName">'
 
     default = {}
     # display template list
@@ -176,7 +188,7 @@ def print_email_templates(config,name):
     content += '<input type="reset">'
     content += '</form>'
   else:
-    content = '<form method="POST" action="/">Enter template name: <input type="text" name="TemplateName">'
+    content += '<form method="POST" action="/">Enter template name: <input type="text" name="TemplateName">'
     content += '<br>Subject: <input type="text" name="SubjectPart" size="40"><br>\n'
     content += 'HTML message: <textarea rows="25" cols="50" name="HtmlPart"></textarea><p>\n'
 
@@ -425,7 +437,8 @@ def mgmt_handler(event, context):
       log_error('Got post params = '+postparams)
       raw_record = urllib.parse.parse_qs(postparams)
       for item in raw_record:
-        user_record[item] = raw_record[item][0]
+        if item != 'Submit':
+          user_record[item] = raw_record[item][0]
 
       log_error('user_record = '+str(user_record))
       if 'action' in user_record:
@@ -449,6 +462,15 @@ def mgmt_handler(event, context):
           else:
             content += '<h3>Successfully removed user from cognito pool</h3>\n'
           content += '<p><a href="?action=rm_user">Back to Remove User Page</a>'
+          content += '<p><a href="">Back to Admin Page</a>'
+        elif user_record['action'] == 'add_tmpl':
+          del user_record['action']
+          response = add_email_tmpl(config,user_record)
+          if not response['status']:
+            content += "<h3>Unable to update template - "+response['message']+"</h3>\n"
+          else:
+            content += "<h3>Successfully updated email template<h3>\n"
+          content += '<p><a href="?action=email_tmpl">Back to Edit Template</a>'
           content += '<p><a href="">Back to Admin Page</a>'
         elif user_record['action'] == 'update_tmpl':
           del user_record['action']
