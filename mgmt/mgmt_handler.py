@@ -141,7 +141,7 @@ def print_email_templates(config,name):
   tmpls = client.list_templates()
 
   log_error("Got name: "str(tmpls))
-  log_error("Got SES templates: "str(tmpls))
+  log_error("Got SES templates: ",str(tmpls))
 
   if name:
     # Add AJAX to get template info when the template name is changed
