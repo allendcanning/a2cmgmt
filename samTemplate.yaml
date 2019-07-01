@@ -269,6 +269,7 @@ Resources:
          Effect: Allow
          Action: [ 'ses:ListTemplates',
                    'ses:CreateTemplate',
+                   'ses:GetTemplate',
                    'ses:GetTemplates'
          ]
          Resource: '*'
