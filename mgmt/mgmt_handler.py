@@ -88,6 +88,7 @@ def print_top_menu():
   content = '<h3>The Firm U Administration Portal</h3>\n'
   content += '<a href="?action=add_user">Add User to The FirmU</a><br>'
   content += '<a href="?action=rm_user">Remove User from The FirmU</a><br>'
+  content += '<a href="?action=add_tmpl">Add Email Templates</a><br>'
   content += '<a href="?action=email_tmpl">Edit Email Templates</a><br>'
   content += '<a href="?action=email_coaches">Email Coaches</a><br>'
 
