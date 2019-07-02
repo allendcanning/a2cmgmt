@@ -78,7 +78,7 @@ def get_config_data(environment):
 def start_html(config):
   # Build HTML content
   css = '<link rel="stylesheet" href="https://s3.amazonaws.com/'+config['s3_html_bucket']+'/admin/css/a2c.css" type="text/css" />'
-  js = '<script src="https://s3.amazonaws.com/'+config['s3_html_bucket']+'/admin/javascript/thefirmu.jss"></script>'
+  js = '<script src="https://s3.amazonaws.com/'+config['s3_html_bucket']+'/admin/javascript/thefirmu.js"></script>'
   content = "<html><head><title>A2C Portal</title>\n"
   content += css+'\n'
   content += js+'\n'
