@@ -100,12 +100,14 @@ def print_top_menu():
   
 def print_rm_user_form():
   content = '<h3>The Firm U Remove a User page</h3>\n'
-  content += '<form method="post" action="">'
+  content += '<form method="post" action="/">'
   content += 'Enter Username: <input type="text" name="username"><p>\n'
   content += '<input type="hidden" name="action" value="rm">\n'
   content += '<input type="submit" name="Submit">'
   content += '</form>'
-  content += '<p><a href="">Back to Admin page</a>'
+  content += '<p><a href="/">Back to Admin page</a>'
+
+  return content
 
 def print_add_user_form():
   content = '<h4>Add a user to The FirmU</h4>'
@@ -115,7 +117,7 @@ def print_add_user_form():
   content += '<input type="hidden" name="action" value="add">\n'
   content += '<input type="submit" name="Submit">'
   content += '</form>'
-  content += '<p><a href="">Back to Admin page</a>'
+  content += '<p><a href="/">Back to Admin page</a>'
 
   return content
 
