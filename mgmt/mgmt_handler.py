@@ -105,7 +105,6 @@ def print_rm_user_form():
   content += '<input type="hidden" name="action" value="rm">\n'
   content += '<input type="submit" name="Submit">'
   content += '</form>'
-  content += '<p><a href="/">Back to Admin page</a>'
 
   return content
 
@@ -117,7 +116,6 @@ def print_add_user_form():
   content += '<input type="hidden" name="action" value="add">\n'
   content += '<input type="submit" name="Submit">'
   content += '</form>'
-  content += '<p><a href="/">Back to Admin page</a>'
 
   return content
 
