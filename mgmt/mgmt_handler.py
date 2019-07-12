@@ -480,7 +480,11 @@ def mgmt_handler(event, context):
           content += print_email_templates(config,"")
           content += '<p><a href="/">Back to Admin Page</a>'
         elif event['queryStringParameters']['action'] == 'email_coaches':
-          content += '<h3>This has not been implemented as of yet</h3>'
+          if 'tmpl' in event['queryStringParameters']:
+            tmpl = event['queryStringParameters']['tmpl']
+          else:
+            tmpl = "default"
+          content += craft_email(config,tmpl)
           content += '<p><a href="/">Back to Admin Page</a>'
         else:
           content += print_top_menu()
@@ -539,11 +543,7 @@ def mgmt_handler(event, context):
           content += '<p><a href="?action=email_tmpl">Back to Edit Template</a>'
           content += '<p><a href="/">Back to Admin Page</a>'
         elif user_record['action'] == 'email':
-          if 'tmpl' in event['queryStringParameters']:
-            tmpl = event['queryStringParameters']['tmpl']
-          else:
-            tmpl = "default"
-          content += craft_email(config,tmpl)
+          content += '<h3>This has not been implemented as of yet</h3>'
           content += '<p><a href="/">Back to Admin Page</a>'
       else:
         content += print_top_menu()
