@@ -134,10 +134,11 @@ def add_email_template(config,template):
 
   return retval
 
-def craft_email(config,template):
+def craft_email(config,name):
   ses = boto3.client('ses')
   tmpls = client.list_templates()
   t = dynamodb.Table(config['coaches_table_name'])
+  default = {}
 
   # Get coaches list from Dynamo, need to add filtering to scan
   items = t.scan()
@@ -151,16 +152,26 @@ def craft_email(config,template):
   content += '<input type="button" name="Add" value="Add" onClick="addCoachesEmail(this.value)">'
   content += 'To: <input type="text" id="toaddresses" name="toaddresses" value="">\n'
 
-  content += 'Select a template to use: <select onChange="loadEmailTemplate(this.value)" name="TemplateName">'
+  content += 'Select a template to use: <select onChange="loadEmailTemplate("craft",this.value)" name="TemplateName">'
   for tmpl in tmpls['TemplatesMetadata']:
-      content += '<option value="'+tmpl['Name']+'">'+tmpl['Name']+'</option>\n'
+    content += '<option value='+tmpl['Name']
+    if tmpl['Name'] == name:
+      template = client.get_template(TemplateName=tmpl['Name'])
+      content += ' selected '
+      default['TemplateName'] = template['Template']['TemplateName']
+      default['SubjectPart'] = template['Template']['SubjectPart']
+      default['HtmlPart'] = template['Template']['HtmlPart']
+      default['TextPart'] = template['Template']['TextPart']
+    content += '>'+tmpl['Name']+'</option>\n'
   content += '</select>'
 
-  content += '<br>Subject: <input type="text" name="SubjectPart" size="40" value=""><br>\n'
+  content += '<br>Subject: <input type="text" name="SubjectPart" size="40" value="'+default['SubjectPart']+'"><br>\n'
   content += 'HTML message: <textarea rows="25" cols="50" name="HtmlPart">'
+  content += default['HtmlPart']
   content += '</textarea><p>\n'
 
   content += 'Text message: <textarea rows="25" cols="50" name="TextPart">'
+  content += default['TextPart']
   content += '</textarea><p>\n'
 
   content += '<input type="hidden" name="action" value="send_email"><br>\n'
@@ -198,7 +209,7 @@ def print_email_templates(config,name):
 
   if tmpls['TemplatesMetadata'] and name:
     # Add AJAX to get template info when the template name is changed
-    content += '<form method="POST" action="/">\nSelect a template to edit: <select onChange="loadEmailTemplate(this.value)" name="TemplateName">'
+    content += '<form method="POST" action="/">\nSelect a template to edit: <select onChange="loadEmailTemplate("print",this.value)" name="TemplateName">'
 
     default = {}
     # display template list
@@ -528,7 +539,11 @@ def mgmt_handler(event, context):
           content += '<p><a href="?action=email_tmpl">Back to Edit Template</a>'
           content += '<p><a href="/">Back to Admin Page</a>'
         elif user_record['action'] == 'email':
-          content += '<h4>This has not been implemented yet</h4>'
+          if 'tmpl' in event['queryStringParameters']:
+            tmpl = event['queryStringParameters']['tmpl']
+          else:
+            tmpl = "default"
+          content += craft_email(config,tmpl)
           content += '<p><a href="/">Back to Admin Page</a>'
       else:
         content += print_top_menu()

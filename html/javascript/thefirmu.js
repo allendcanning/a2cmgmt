@@ -1,4 +1,4 @@
-function loadEmailTemplate(name) {
+function loadEmailTemplate(req,name) {
     var xhttp = new XMLHttpRequest();
     if (name == "") {
         name = "default";
@@ -9,7 +9,14 @@ function loadEmailTemplate(name) {
             document.getElementById("adminportal").innerHTML = this.responseText;
         }
     };
-    xhttp.open("GET", "/?action=email_tmpl&tmpl="+name, true);
+    switch(req) {
+      case 'print':
+        xhttp.open("GET", "/?action=email_tmpl&tmpl="+name, true);
+        break;
+      case 'craft':
+        xhttp.open("GET", "/?action=email_coaches&tmpl="+name, true);
+        break;
+    }
     xhttp.send();
 }
 
