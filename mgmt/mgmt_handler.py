@@ -149,8 +149,8 @@ def craft_email(config,name):
     content += '<option value="'+c['email']+'">'+c['name']+' - '+c['school']+'</option>\n'
 
   content += '</select>\n'
-  content += '<input type="button" name="Add" value="Add" onClick="addCoachesEmail(this.value)">'
-  content += 'To: <input type="text" id="toaddresses" name="toaddresses" value="">\n'
+  content += '<input type="button" name="Add" value="Add" onClick="addCoachesEmail(this.value)"><p>'
+  content += 'To: <input type="text" id="toaddresses" name="toaddresses" value=""><p>\n'
 
   content += 'Select a template to use: <select onChange="loadEmailTemplate("craft",this.value)" name="TemplateName">'
   for tmpl in tmpls['TemplatesMetadata']:
@@ -165,7 +165,7 @@ def craft_email(config,name):
     content += '>'+tmpl['Name']+'</option>\n'
   content += '</select>'
 
-  content += '<br>Subject: <input type="text" name="SubjectPart" size="40" value="'+default['SubjectPart']+'"><br>\n'
+  content += '<p>Subject: <input type="text" name="SubjectPart" size="40" value="'+default['SubjectPart']+'"><p>\n'
   content += 'HTML message: <textarea rows="25" cols="50" name="HtmlPart">'
   content += default['HtmlPart']
   content += '</textarea><p>\n'
