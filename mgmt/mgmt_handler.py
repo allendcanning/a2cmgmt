@@ -144,7 +144,7 @@ def craft_email(config,name):
   items = t.scan()
   coaches = items['Items']
 
-  content += '<form method="POST" action="">\nSelect coaches from list: <select name="coaches" multiple>\n'
+  content = '<form method="POST" action="">\nSelect coaches from list: <select name="coaches" multiple>\n'
   for c in coaches:
     content += '<option value="'+c['email']+'">'+c['name']+' - '+c['school']+'</option>\n'
 
