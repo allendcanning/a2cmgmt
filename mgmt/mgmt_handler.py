@@ -149,10 +149,10 @@ def craft_email(config,name):
     content += '<option value="'+c['email']+'">'+c['name']+' - '+c['school']+'</option>\n'
 
   content += '</select>\n'
-  content += '<input type="button" name="Add" value="Add" onClick="addCoachesEmail(this.value)"><p>'
+  content += '<input type="button" name="Add" value="Add" onClick="addCoachesEmail(this.value)"><p><p>'
   content += 'To: <input type="text" id="toaddresses" name="toaddresses" value=""><p>\n'
 
-  content += 'Select a template to use: <select onChange="loadEmailTemplate("craft",this.value)" name="TemplateName">'
+  content += 'Select a template to use: <select onChange="loadEmailTemplate(\'craft\',this.value)" name="TemplateName">'
   for tmpl in tmpls['TemplatesMetadata']:
     content += '<option value='+tmpl['Name']
     if tmpl['Name'] == name:
@@ -209,7 +209,7 @@ def print_email_templates(config,name):
 
   if tmpls['TemplatesMetadata'] and name:
     # Add AJAX to get template info when the template name is changed
-    content += '<form method="POST" action="/">\nSelect a template to edit: <select onChange="loadEmailTemplate("print",this.value)" name="TemplateName">'
+    content += '<form method="POST" action="/">\nSelect a template to edit: <select onChange="loadEmailTemplate(\'print\',this.value)" name="TemplateName">'
 
     default = {}
     # display template list
