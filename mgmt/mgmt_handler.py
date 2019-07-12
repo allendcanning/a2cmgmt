@@ -156,7 +156,7 @@ def craft_email(config,name):
   for tmpl in tmpls['TemplatesMetadata']:
     content += '<option value='+tmpl['Name']
     if tmpl['Name'] == name:
-      template = client.get_template(TemplateName=tmpl['Name'])
+      template = ses.get_template(TemplateName=tmpl['Name'])
       content += ' selected '
       default['TemplateName'] = template['Template']['TemplateName']
       default['SubjectPart'] = template['Template']['SubjectPart']
