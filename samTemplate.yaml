@@ -236,12 +236,6 @@ Resources:
       Name: !Join ['',['/a2c/', !Ref Environment, '/table_name']]
       Type: String
       Value: !Ref theFirmuDynamoDBTable
-  dynamoDBTmplTableNameSSM:
-    Type: AWS::SSM::Parameter
-    Properties: 
-      Name: !Join ['',['/a2c/', !Ref Environment, '/tmpl_table_name']]
-      Type: String
-      Value: !Ref theFirmuTmplDynamoDBTable
   coachesTableNameSSM:
     Type: AWS::SSM::Parameter
     Properties: 
@@ -264,7 +258,7 @@ Resources:
                 "dynamodb:Query",
                 "dynamodb:UpdateItem"
           ]
-          Resource: [ !GetAtt [theFirmuDynamoDBTable,'Arn'], !GetAtt theFirmuTmplDynamoDBTable.Arn, !GetAtt coachesDynamoDBTable.Arn ]
+          Resource: [ !GetAtt [theFirmuDynamoDBTable,'Arn'], !GetAtt coachesDynamoDBTable.Arn ]
       Roles:
         - !Ref "mgmtPortalRole"
   mgmtPortalSESPolicy:
