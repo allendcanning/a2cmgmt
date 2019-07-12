@@ -136,7 +136,7 @@ def add_email_template(config,template):
 
 def craft_email(config,name):
   ses = boto3.client('ses')
-  tmpls = client.list_templates()
+  tmpls = ses.list_templates()
   t = dynamodb.Table(config['coaches_table_name'])
   default = {}
 
