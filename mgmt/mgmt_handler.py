@@ -66,10 +66,6 @@ def get_config_data(environment):
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   config['cognito_auth_url'] =response['Parameter']['Value'] 
 
-  ssmpath="/a2c/"+environment+"/tmpl_table_name"
-  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-  config['tmpl_table_name'] =response['Parameter']['Value'] 
-
   ssmpath="/a2c/"+environment+"/coaches_table_name"
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   config['coaches_table_name'] =response['Parameter']['Value'] 
