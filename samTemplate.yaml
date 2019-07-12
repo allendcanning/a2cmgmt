@@ -183,6 +183,20 @@ Resources:
         WriteCapacityUnits: 5
       #TableName: !Join ['',["thefirmu_user_info-", !Ref Environment]]
       TableName: "thefirmu_user_info"
+  coachesDynamoDBTable:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: "email"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "email"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      #TableName: !Join ['',["coaches-", !Ref Environment]]
+      TableName: "coaches"
   theFirmuAdminCognitoClient:
     Type: AWS::Cognito::UserPoolClient
     Properties: 
@@ -228,6 +242,12 @@ Resources:
       Name: !Join ['',['/a2c/', !Ref Environment, '/tmpl_table_name']]
       Type: String
       Value: !Ref theFirmuTmplDynamoDBTable
+  coachesTableNameSSM:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: !Join ['',['/a2c/', !Ref Environment, '/coaches_table_name']]
+      Type: String
+      Value: !Ref coachesDynamoDBTable
   mgmtPortalDynamoPolicy:
     Type: AWS::IAM::Policy
     Properties:
@@ -244,7 +264,7 @@ Resources:
                 "dynamodb:Query",
                 "dynamodb:UpdateItem"
           ]
-          Resource: [ !GetAtt [theFirmuDynamoDBTable,'Arn'], !GetAtt theFirmuTmplDynamoDBTable.Arn ]
+          Resource: [ !GetAtt [theFirmuDynamoDBTable,'Arn'], !GetAtt theFirmuTmplDynamoDBTable.Arn, !GetAtt coachesDynamoDBTable.Arn ]
       Roles:
         - !Ref "mgmtPortalRole"
   mgmtPortalSESPolicy:

@@ -12,3 +12,9 @@ function loadEmailTemplate(name) {
     xhttp.open("GET", "/?action=email_tmpl&tmpl="+name, true);
     xhttp.send();
 }
+
+function addCoachesEmail(coach) {
+  document.getElementById("toaddresses").innerHTML = coach;
+  return true;
+}
+

@@ -69,6 +69,10 @@ def get_config_data(environment):
   ssmpath="/a2c/"+environment+"/tmpl_table_name"
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   config['tmpl_table_name'] =response['Parameter']['Value'] 
+
+  ssmpath="/a2c/"+environment+"/coaches_table_name"
+  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+  config['coaches_table_name'] =response['Parameter']['Value'] 
   
   for item in config:
     log_error("Got config key = "+item+" value = "+config[item])
@@ -134,6 +138,41 @@ def add_email_template(config,template):
 
   return retval
 
+def craft_email(config,template):
+  ses = boto3.client('ses')
+  tmpls = client.list_templates()
+  t = dynamodb.Table(config['coaches_table_name'])
+
+  # Get coaches list from Dynamo, need to add filtering to scan
+  items = t.scan()
+  coaches = items['Items']
+
+  content += '<form method="POST" action="">\nSelect coaches from list: <select name="coaches" multiple>\n'
+  for c in coaches:
+    content += '<option value="'+c['email']+'">'+c['name']+' - '+c['school']+'</option>\n'
+
+  content += '</select>\n'
+  content += '<input type="button" name="Add" value="Add" onClick="addCoachesEmail(this.value)">'
+  content += 'To: <input type="text" id="toaddresses" name="toaddresses" value="">\n'
+
+  content += 'Select a template to use: <select onChange="loadEmailTemplate(this.value)" name="TemplateName">'
+  for tmpl in tmpls['TemplatesMetadata']:
+      content += '<option value="'+tmpl['Name']+'">'+tmpl['Name']+'</option>\n'
+  content += '</select>'
+
+  content += '<br>Subject: <input type="text" name="SubjectPart" size="40" value=""><br>\n'
+  content += 'HTML message: <textarea rows="25" cols="50" name="HtmlPart">'
+  content += '</textarea><p>\n'
+
+  content += 'Text message: <textarea rows="25" cols="50" name="TextPart">'
+  content += '</textarea><p>\n'
+
+  content += '<input type="hidden" name="action" value="send_email"><br>\n'
+  content += '<input type="submit" name="submit" value="Send Email">\n'
+  content += '</form>\n'
+
+  return content
+  
 def update_email_template(config,template):
   retval = {}
   client = boto3.client('ses')
