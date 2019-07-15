@@ -149,7 +149,7 @@ def craft_email(config,name):
     content += '<option value="'+c['email']+'">'+c['first']+' '+c['last']+' - '+c['school']+'</option>\n'
 
   content += '</select>\n'
-  content += '<input type="button" name="Add" value="Add" onClick="addCoachesEmail(document.getElementById(\'coaches\').value)"><p><p>'
+  content += '<input type="button" name="Add" value="Add" onClick="addCoachesEmail(document.getElementById(\'coaches\'))"><p><p>'
   content += 'To: <input type="text" id="toaddresses" name="toaddresses" value=""><p>\n'
 
   content += 'Select a template to use: <select onChange="loadEmailTemplate(\'craft\',this.value)" name="TemplateName">'

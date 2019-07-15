@@ -20,8 +20,15 @@ function loadEmailTemplate(req,name) {
     xhttp.send();
 }
 
-function addCoachesEmail(coach) {
-  document.getElementById("toaddresses").value += coach;
+function addCoachesEmail(coaches) {
+  var opt;
+
+  for (var i=0; len=coaches.options.length; i<len; i++) {
+    opt = coaches.options[i];
+    if ( opt.selected ) {
+      document.getElementById("toaddresses").value += opt.value+', ';
+    }
+  }
   return true;
 }
 
