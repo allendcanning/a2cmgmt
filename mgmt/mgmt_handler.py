@@ -144,12 +144,12 @@ def craft_email(config,name):
   items = t.scan()
   coaches = items['Items']
 
-  content = '<form method="POST" action="">\nSelect coaches from list: <select name="coaches" multiple>\n'
+  content = '<form method="POST" action="">\nSelect coaches from list: <select name="coaches" id="coaches" multiple>\n'
   for c in coaches:
     content += '<option value="'+c['email']+'">'+c['first']+' '+c['last']+' - '+c['school']+'</option>\n'
 
   content += '</select>\n'
-  content += '<input type="button" name="Add" value="Add" onClick="addCoachesEmail(this.value)"><p><p>'
+  content += '<input type="button" name="Add" value="Add" onClick="addCoachesEmail(document.getElementById(\'coaches\').value)"><p><p>'
   content += 'To: <input type="text" id="toaddresses" name="toaddresses" value=""><p>\n'
 
   content += 'Select a template to use: <select onChange="loadEmailTemplate(\'craft\',this.value)" name="TemplateName">'

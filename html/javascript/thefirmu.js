@@ -21,7 +21,7 @@ function loadEmailTemplate(req,name) {
 }
 
 function addCoachesEmail(coach) {
-  document.getElementById("toaddresses").innerHTML += coach;
+  document.getElementById("toaddresses").value += coach;
   return true;
 }
 
