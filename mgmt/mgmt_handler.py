@@ -128,6 +128,22 @@ def get_coaches(config):
 
   return coaches
 
+def get_coach(config,coach):
+  t = dynamodb.Table(config['coaches_table_name'])
+
+  # Get coaches list from Dynamo, need to add filtering to scan
+  coach_record = t.get_item(Key=coach)
+
+  return coach_record['Item']
+
+def get_athlete(config,athlete):
+  t = dynamodb.Table(config['table_name'])
+
+  # Get coaches list from Dynamo, need to add filtering to scan
+  athlete_record = t.get_item(Key=athlete)
+
+  return athlete_record['Item']
+
 def get_athletes(config):
   t = dynamodb.Table(config['table_name'])
 
@@ -213,6 +229,34 @@ def craft_email(config,name):
 
   return content
   
+def send_email_template(config,toaddresses,profiles,template)
+  client = boto3.client('ses')
+
+  source = 'admin@thefirmu.org'
+  replyto = 'admin@thefirmu.org'
+  dest = {}
+
+  athletes = get_athletes(config)
+
+  for to in toaddresses:
+    dest['ToAddresses'].append(to)
+    coach = get_coach(config,to)
+
+    for athlete in profiles:
+      template_data = athletes
+      template_data['coachname'] = coach['first']+' '+coach['last']
+      template_data['school'] = coach['school']
+
+      try:
+        response = client.send_templated_email(Source=source, Destination=dest, ReplyToAddress=replyto,Template=template,TemplateData=athlete)
+        retval['status'] = True
+        retval['message'] = "Successfully sent email"
+      except ClientError as e:
+        log_error("response = "+json.dumps(e.response))
+        log_error("Error is "+e.response['Error']['Message'])
+        retval['status'] = False
+        retval['message'] = e.response['Error']['Message']
+
 def update_email_template(config,template):
   retval = {}
   client = boto3.client('ses')
@@ -575,7 +619,7 @@ def mgmt_handler(event, context):
             content += "<h3>Successfully updated email template<h3>\n"
           content += '<p><a href="?action=email_tmpl">Back to Edit Template</a>'
           content += '<p><a href="/">Back to Admin Page</a>'
-        elif user_record['action'] == 'email':
+        elif user_record['action'] == 'send_email':
           content += '<h3>This has not been implemented as of yet</h3>'
           content += '<p><a href="/">Back to Admin Page</a>'
       else:

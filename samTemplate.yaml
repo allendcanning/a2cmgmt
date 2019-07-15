@@ -273,6 +273,7 @@ Resources:
          Action: [ 'ses:ListTemplates',
                    'ses:CreateTemplate',
                    'ses:GetTemplate',
+                   'ses:UpdateTemplate',
                    'ses:GetTemplates'
          ]
          Resource: '*'
