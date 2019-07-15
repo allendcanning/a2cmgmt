@@ -20,13 +20,16 @@ function loadEmailTemplate(req,name) {
     xhttp.send();
 }
 
-function addCoachesEmail(coaches) {
+function addEmails(sel,newsel) {
   var opt;
 
-  for (var i=0; len=coaches.options.length; i<len; i++) {
-    opt = coaches.options[i];
+  for (var i=0; i<sel.options.length; i++) {
+    opt = sel.options[i];
     if ( opt.selected ) {
-      document.getElementById("toaddresses").value += opt.value+', ';
+      var newopt = document.createElement('option');
+      newopt.value = opt.value;
+      newopt.innerHTML = opt.innerHTML;
+      document.getElementById(newsel).appendChild(newopt);
     }
   }
   return true;

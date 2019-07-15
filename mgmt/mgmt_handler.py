@@ -119,6 +119,24 @@ def print_add_user_form():
 
   return content
 
+def get_coaches(config):
+  t = dynamodb.Table(config['coaches_table_name'])
+
+  # Get coaches list from Dynamo, need to add filtering to scan
+  items = t.scan()
+  coaches = items['Items']
+
+  return coaches
+
+def get_athletes(config):
+  t = dynamodb.Table(config['table_name'])
+
+  # Get coaches list from Dynamo, need to add filtering to scan
+  items = t.scan()
+  athletes = items['Items']
+
+  return athletes
+
 def add_email_template(config,template):
   retval = {}
   client = boto3.client('ses')
@@ -137,20 +155,35 @@ def add_email_template(config,template):
 def craft_email(config,name):
   ses = boto3.client('ses')
   tmpls = ses.list_templates()
-  t = dynamodb.Table(config['coaches_table_name'])
   default = {}
 
   # Get coaches list from Dynamo, need to add filtering to scan
-  items = t.scan()
-  coaches = items['Items']
+  coaches = get_coaches(config)
 
   content = '<form method="POST" action="">\nSelect coaches from list: <select name="coaches" id="coaches" multiple>\n'
   for c in coaches:
     content += '<option value="'+c['email']+'">'+c['first']+' '+c['last']+' - '+c['school']+'</option>\n'
 
   content += '</select>\n'
-  content += '<input type="button" name="Add" value="Add" onClick="addCoachesEmail(document.getElementById(\'coaches\'))"><p><p>'
-  content += 'To: <input type="text" id="toaddresses" name="toaddresses" value=""><p>\n'
+  content += '<input type="button" name="Add" value="Add" onClick="addEmails(document.getElementById(\'coaches\'),\'toaddresses\')"><p><p>'
+  content += 'To: <select id="toaddresses" name="toaddresses"></select><p>\n'
+
+  athletes = get_athletes(config)
+
+  content += 'Select athletes to profile: <select name="athletes" id="athletes" multiple>\n'
+  for a in athletes:
+    content += '<option value="'+a['email']+'">'
+    if 'firstname' in a:
+      content += a['firstname']
+    content += ' '
+    if 'lastname' in a:
+      content += a['lastname']
+    if 'yog' in a:
+      content += ' - '+a['yog']
+    content += '</option>\n'
+  content += '</select>\n'
+  content += '<input type="button" name="Add" value="Add" onClick="addEmails(document.getElementById(\'athletes\'),\'profiles\')"><p><p>'
+  content += 'For: <select name="profiles" id="profiles" multiple></select>\n'
 
   content += 'Select a template to use: <select onChange="loadEmailTemplate(\'craft\',this.value)" name="TemplateName">'
   for tmpl in tmpls['TemplatesMetadata']:
