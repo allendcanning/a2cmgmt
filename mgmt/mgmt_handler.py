@@ -146,7 +146,7 @@ def craft_email(config,name):
 
   content = '<form method="POST" action="">\nSelect coaches from list: <select name="coaches" multiple>\n'
   for c in coaches:
-    content += '<option value="'+c['email']+'">'+c['name']+' - '+c['school']+'</option>\n'
+    content += '<option value="'+c['email']+'">'+c['First Name']+' '+c['Last Name']+' - '+c['school']+'</option>\n'
 
   content += '</select>\n'
   content += '<input type="button" name="Add" value="Add" onClick="addCoachesEmail(this.value)"><p><p>'
