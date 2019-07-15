@@ -229,7 +229,7 @@ def craft_email(config,name):
 
   return content
   
-def send_email_template(config,toaddresses,profiles,template)
+def send_email_template(config,toaddresses,profiles,template):
   client = boto3.client('ses')
 
   source = 'admin@thefirmu.org'
