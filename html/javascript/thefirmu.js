@@ -29,6 +29,7 @@ function addEmails(sel,newsel) {
       var newopt = document.createElement('option');
       newopt.value = opt.value;
       newopt.innerHTML = opt.innerHTML;
+      newopt.selected = opt.selected;
       document.getElementById(newsel).appendChild(newopt);
     }
   }

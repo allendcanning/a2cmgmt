@@ -166,7 +166,7 @@ def craft_email(config,name):
 
   content += '</select>\n'
   content += '<input type="button" name="Add" value="Add" onClick="addEmails(document.getElementById(\'coaches\'),\'toaddresses\')"><p><p>'
-  content += 'To: <select id="toaddresses" name="toaddresses"></select><p>\n'
+  content += 'To: <select id="toaddresses" name="toaddresses" multiple></select><p>\n'
 
   athletes = get_athletes(config)
 
@@ -183,7 +183,7 @@ def craft_email(config,name):
     content += '</option>\n'
   content += '</select>\n'
   content += '<input type="button" name="Add" value="Add" onClick="addEmails(document.getElementById(\'athletes\'),\'profiles\')"><p><p>'
-  content += 'For: <select name="profiles" id="profiles" multiple></select>\n'
+  content += 'For: <select name="profiles" id="profiles" multiple></select><p><p>\n'
 
   content += 'Select a template to use: <select onChange="loadEmailTemplate(\'craft\',this.value)" name="TemplateName">'
   for tmpl in tmpls['TemplatesMetadata']:
