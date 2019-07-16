@@ -241,7 +241,7 @@ def send_email_template(config,record):
   dest = {}
   toaddresses = record['toaddresses']
   profiles = record['profiles']
-  template = record['TemplateNamne']
+  template = record['TemplateName']
 
   athletes = get_athletes(config)
 
