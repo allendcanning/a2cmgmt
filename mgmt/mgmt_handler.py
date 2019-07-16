@@ -135,16 +135,20 @@ def get_coaches(config):
 def get_coach(config,coach):
   t = dynamodb.Table(config['coaches_table_name'])
 
+  key = { 'email': coach }
+
   # Get coaches list from Dynamo, need to add filtering to scan
-  coach_record = t.get_item(Key=coach)
+  coach_record = t.get_item(Key=key)
 
   return coach_record['Item']
 
 def get_athlete(config,athlete):
   t = dynamodb.Table(config['table_name'])
 
+  key = { 'email': athlete }
+
   # Get coaches list from Dynamo, need to add filtering to scan
-  athlete_record = t.get_item(Key=athlete)
+  athlete_record = t.get_item(Key=key)
 
   return athlete_record['Item']
 
@@ -192,7 +196,7 @@ def craft_email(config,name):
 
   content += 'Select athletes to profile: <select name="athletes" id="athletes" multiple>\n'
   for a in athletes:
-    content += '<option value="'+a['email']+'">'
+    content += '<option value="'+a['username']+'">'
     if 'firstname' in a:
       content += a['firstname']
     content += ' '
