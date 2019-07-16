@@ -135,6 +135,8 @@ def get_coaches(config):
 def get_coach(config,coach):
   t = dynamodb.Table(config['coaches_table_name'])
 
+  log_error("Key = "+coach)
+
   # Get coaches list from Dynamo, need to add filtering to scan
   coach_record = t.get_item(Key={ 'email': coach })
 
