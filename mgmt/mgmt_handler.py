@@ -180,7 +180,7 @@ def craft_email(config,name):
   # Get coaches list from Dynamo, need to add filtering to scan
   coaches = get_coaches(config)
 
-  content = '<form method="POST" action="">\nSelect coaches from list: <select name="coaches" id="coaches" multiple>\n'
+  content = '<form method="POST" action="/">\nSelect coaches from list: <select name="coaches" id="coaches" multiple>\n'
   for c in coaches:
     content += '<option value="'+c['email']+'">'+c['first']+' '+c['last']+' - '+c['school']+'</option>\n'
 
