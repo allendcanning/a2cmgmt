@@ -135,10 +135,8 @@ def get_coaches(config):
 def get_coach(config,coach):
   t = dynamodb.Table(config['coaches_table_name'])
 
-  key = { 'email': coach }
-
   # Get coaches list from Dynamo, need to add filtering to scan
-  coach_record = t.get_item(Key=key)
+  coach_record = t.get_item(Key={ 'email': coach })
 
   log_error("Coach query returned = "+str(coach_record))
 
@@ -147,10 +145,8 @@ def get_coach(config,coach):
 def get_athlete(config,athlete):
   t = dynamodb.Table(config['table_name'])
 
-  key = { 'email': athlete }
-
   # Get coaches list from Dynamo, need to add filtering to scan
-  athlete_record = t.get_item(Key=key)
+  athlete_record = t.get_item(Key={ 'username': athlete })
 
   log_error("Athlete query returned = "+str(athlete_record))
   
