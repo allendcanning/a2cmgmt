@@ -70,6 +70,10 @@ def get_config_data(environment):
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   config['coaches_table_name'] =response['Parameter']['Value'] 
   
+  ssmpath="/a2c/"+environment+"/ses_configuration_set"
+  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+  config['ses_configuration_set'] =response['Parameter']['Value'] 
+
   for item in config:
     log_error("Got config key = "+item+" value = "+config[item])
 
@@ -248,7 +252,7 @@ def send_email_template(config,toaddresses,profiles,template):
       template_data['school'] = coach['school']
 
       try:
-        response = client.send_templated_email(Source=source, Destination=dest, ReplyToAddress=replyto,Template=template,TemplateData=athlete)
+        response = client.send_templated_email(Source=source, Destination=dest, ReplyToAddress=replyto,Template=template,ConfigurationSetName=config['ses_configuration_set'],TemplateData=athlete)
         retval['status'] = True
         retval['message'] = "Successfully sent email"
       except ClientError as e:

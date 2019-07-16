@@ -18,6 +18,9 @@ Parameters:
   Environment:
     Type: String 
     Default: "dev"
+  ConfigurationSet:
+    Type: String 
+    Default: "theFirmu"
 Mappings:
   VPC2Subnet:
     vpc-729d3814:
@@ -242,6 +245,12 @@ Resources:
       Name: !Join ['',['/a2c/', !Ref Environment, '/coaches_table_name']]
       Type: String
       Value: !Ref coachesDynamoDBTable
+  sesConfigurationSetSSM:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: !Join ['',['/a2c/', !Ref Environment, '/ses_configuration_set']]
+      Type: String
+      Value: !Ref ConfigurationSet
   mgmtPortalDynamoPolicy:
     Type: AWS::IAM::Policy
     Properties:
