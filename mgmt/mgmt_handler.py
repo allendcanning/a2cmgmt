@@ -233,12 +233,15 @@ def craft_email(config,name):
 
   return content
   
-def send_email_template(config,toaddresses,profiles,template):
+def send_email_template(config,record):
   client = boto3.client('ses')
 
   source = 'admin@thefirmu.org'
   replyto = 'admin@thefirmu.org'
   dest = {}
+  toaddresses = record['toaddresses']
+  profiles = record['profiles']
+  template = record['TemplateNamne']
 
   athletes = get_athletes(config)
 
@@ -247,7 +250,7 @@ def send_email_template(config,toaddresses,profiles,template):
     coach = get_coach(config,to)
 
     for athlete in profiles:
-      template_data = athletes
+      template_data = athletes[athlete]
       template_data['coachname'] = coach['first']+' '+coach['last']
       template_data['school'] = coach['school']
 
@@ -624,7 +627,7 @@ def mgmt_handler(event, context):
           content += '<p><a href="?action=email_tmpl">Back to Edit Template</a>'
           content += '<p><a href="/">Back to Admin Page</a>'
         elif user_record['action'] == 'send_email':
-          content += '<h3>This has not been implemented as of yet</h3>'
+          content += send_email_template(config,user_record)
           content += '<p><a href="/">Back to Admin Page</a>'
       else:
         content += print_top_menu()
