@@ -239,6 +239,7 @@ def send_email_template(config,record):
   source = 'admin@thefirmu.org'
   replyto = 'admin@thefirmu.org'
   dest = {}
+  dest['ToAddresses'] = []
   toaddresses = record['toaddresses']
   profiles = record['profiles']
   template = record['TemplateName']
