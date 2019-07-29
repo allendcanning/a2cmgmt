@@ -283,6 +283,7 @@ Resources:
                    'ses:CreateTemplate',
                    'ses:GetTemplate',
                    'ses:UpdateTemplate',
+                   'ses:SendTemplatedEmail',
                    'ses:GetTemplates'
          ]
          Resource: '*'
