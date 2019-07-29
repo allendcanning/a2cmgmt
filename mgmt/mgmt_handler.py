@@ -216,7 +216,7 @@ def craft_email(config,name):
     content += ' '
     if 'lastname' in athletes[a]:
       content += athletes[a]['lastname']
-    if 'yog' in a:
+    if 'yog' in athletes[a]:
       content += ' - '+athletes[a]['yog']
     content += '</option>\n'
   content += '</select>\n'
