@@ -281,7 +281,7 @@ def send_email_template(config,record):
       template_data['school'] = coach['school']
 
       try:
-        response = client.send_templated_email(Source=source, Destination=dest, ReplyToAddresses=replyto,Template=template,ConfigurationSetName=config['ses_configuration_set'],TemplateData=athlete)
+        response = client.send_templated_email(Source=source, Destination=dest, ReplyToAddresses=replyto,Template=template,ConfigurationSetName=config['ses_configuration_set'],TemplateData=template_data)
         retval['status'] = True
         retval['message'] = "Successfully sent email"
       except ClientError as e:
