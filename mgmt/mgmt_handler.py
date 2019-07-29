@@ -264,12 +264,14 @@ def send_email_template(config,record):
   template = record['TemplateName']
 
   athletes = get_athletes(config)
+  log_error("Athletes = "+athletes)
 
   for to in toaddresses:
     dest['ToAddresses'].append(to)
     coach = get_coach(config,to)
 
     for athlete in profiles:
+      log_error("Athlete profile: "+athletes[athlete])
       for item in athletes[athlete]:
         template_data[item] = athletes[athlete][item]
       template_data['coachname'] = coach['first']+' '+coach['last']
