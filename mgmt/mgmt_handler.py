@@ -165,14 +165,13 @@ def get_athlete(config,athlete):
 
 def get_athletes(config):
   t = dynamodb.Table(config['table_name'])
+  athletes = {}
 
   # Get coaches list from Dynamo, need to add filtering to scan
   items = t.scan()
   if 'Items' in items:
     for item in items:
       athletes[item['username']] = item
-  else:
-    athletes = []
 
   return athletes
 
