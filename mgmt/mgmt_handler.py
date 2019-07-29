@@ -610,6 +610,7 @@ def mgmt_handler(event, context):
       postparams = base64.b64decode(bytes(postparams,'UTF-8')).decode('utf-8')
       log_error('Got post params = '+postparams)
       raw_record = urllib.parse.parse_qs(postparams)
+      log_error('Raw Record = '+str(raw_record))
       for item in raw_record:
         if item != 'Submit':
           user_record[item] = raw_record[item][0]
