@@ -254,8 +254,9 @@ def craft_email(config,name):
 def send_email_template(config,record):
   client = boto3.client('ses')
 
+  replyto = []
   source = 'admin@thefirmu.org'
-  replyto = 'admin@thefirmu.org'
+  replyto.append('admin@thefirmu.org')
   toaddresses = []
   profiles = []
   dest = {}
