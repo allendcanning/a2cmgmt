@@ -170,7 +170,7 @@ def get_athletes(config):
   # Get coaches list from Dynamo, need to add filtering to scan
   items = t.scan()
   if 'Items' in items:
-    for item in items:
+    for item in items['Items']:
       athletes[item['username']] = item
 
   return athletes
