@@ -264,7 +264,7 @@ def send_email_template(config,record):
   template = record['TemplateName']
 
   athletes = get_athletes(config)
-  log_error("Athletes = "+athletes)
+  log_error("Athletes = "+str(athletes))
 
   for to in toaddresses:
     dest['ToAddresses'].append(to)
