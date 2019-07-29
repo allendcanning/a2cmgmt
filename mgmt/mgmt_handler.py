@@ -128,7 +128,10 @@ def get_coaches(config):
 
   # Get coaches list from Dynamo, need to add filtering to scan
   items = t.scan()
-  coaches = items['Items']
+  if 'Items' in items:
+    coaches = items['Items']
+  else:
+    coaches = []
 
   return coaches
 
@@ -142,7 +145,10 @@ def get_coach(config,coach):
 
   log_error("Coach query returned = "+str(coach_record))
 
-  return coach_record['item']
+  if 'Item' in coach_record:
+    return coach_record['item']
+  else:
+    return False
 
 def get_athlete(config,athlete):
   t = dynamodb.Table(config['table_name'])
@@ -152,14 +158,20 @@ def get_athlete(config,athlete):
 
   log_error("Athlete query returned = "+str(athlete_record))
   
-  return athlete_record['item']
+  if 'Item' in athlete_record:
+    return athlete_record['item']
+  else:
+    return False
 
 def get_athletes(config):
   t = dynamodb.Table(config['table_name'])
 
   # Get coaches list from Dynamo, need to add filtering to scan
   items = t.scan()
-  athletes = items['Items']
+  if 'Items' in items:
+    athletes = items['Items']
+  else:
+    athletes = []
 
   return athletes
 
