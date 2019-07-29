@@ -260,6 +260,7 @@ def send_email_template(config,record):
   profiles = []
   dest = {}
   dest['ToAddresses'] = []
+  template_data = {}
   toaddresses.append(record['toaddresses'])
   profiles.append(record['profiles'])
   template = record['TemplateName']
