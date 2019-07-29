@@ -210,14 +210,14 @@ def craft_email(config,name):
 
   content += 'Select athletes to profile: <select name="athletes" id="athletes" multiple>\n'
   for a in athletes:
-    content += '<option value="'+a['username']+'">'
-    if 'firstname' in a:
-      content += a['firstname']
+    content += '<option value="'+athletes[a]['username']+'">'
+    if 'firstname' in athletes[a]:
+      content += athletes[a]['firstname']
     content += ' '
-    if 'lastname' in a:
-      content += a['lastname']
+    if 'lastname' in athletes[a]:
+      content += athletes[a]['lastname']
     if 'yog' in a:
-      content += ' - '+a['yog']
+      content += ' - '+athletes[a]['yog']
     content += '</option>\n'
   content += '</select>\n'
   content += '<input type="button" name="Add" value="Add" onClick="addEmails(document.getElementById(\'athletes\'),\'profiles\')"><p><p>'
