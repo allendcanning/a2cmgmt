@@ -614,6 +614,8 @@ def mgmt_handler(event, context):
       for item in raw_record:
         if item != 'Submit':
           user_record[item] = raw_record[item][0]
+        if item == 'toaddresses':
+          user_record[item] = raw_record[item]
 
       log_error('user_record = '+str(user_record))
       if 'action' in user_record:
