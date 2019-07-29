@@ -650,11 +650,16 @@ def mgmt_handler(event, context):
           if not response['status']:
             content += "<h3>Unable to update template - "+response['message']+"</h3>\n"
           else:
-            content += "<h3>Successfully updated email template<h3>\n"
+            content += "<h3>Successfully updated email template</h3>\n"
           content += '<p><a href="?action=email_tmpl">Back to Edit Template</a>'
           content += '<p><a href="/">Back to Admin Page</a>'
         elif user_record['action'] == 'send_email':
-          content += send_email_template(config,user_record)
+          response = send_email_template(config,user_record)
+          if not response['status']:
+            content += '<h3>Unable to send email template</h3>\n'
+          else:
+            content += '<h3>Successfully sent email template</h3>\n'
+          content += '<p><a href="?action=email_coaches">Back to Email Coaches</a>'
           content += '<p><a href="/">Back to Admin Page</a>'
       else:
         content += print_top_menu()
