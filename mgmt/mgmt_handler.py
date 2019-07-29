@@ -146,7 +146,7 @@ def get_coach(config,coach):
   log_error("Coach query returned = "+str(coach_record))
 
   if 'Item' in coach_record:
-    return coach_record['item']
+    return coach_record['Item']
   else:
     return False
 
@@ -159,7 +159,7 @@ def get_athlete(config,athlete):
   log_error("Athlete query returned = "+str(athlete_record))
   
   if 'Item' in athlete_record:
-    return athlete_record['item']
+    return athlete_record['Item']
   else:
     return False
 
