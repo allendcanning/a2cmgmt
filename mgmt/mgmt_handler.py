@@ -291,6 +291,8 @@ def send_email_template(config,record):
         retval['status'] = False
         retval['message'] = e.response['Error']['Message']
 
+  return retval
+
 def update_email_template(config,template):
   retval = {}
   client = boto3.client('ses')
@@ -658,7 +660,7 @@ def mgmt_handler(event, context):
           if not response['status']:
             content += '<h3>Unable to send email template</h3>\n'
           else:
-            content += '<h3>Successfully sent email template</h3>\n'
+            content += '<h3>'+response['message']+'</h3>\n'
           content += '<p><a href="?action=email_coaches">Back to Email Coaches</a>'
           content += '<p><a href="/">Back to Admin Page</a>'
       else:
