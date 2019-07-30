@@ -17,7 +17,7 @@ Parameters:
     Default: "https://adminportal.thefirmu.org"
   Environment:
     Type: String 
-    Default: "prod"
+    Default: "dev"
   ConfigurationSet:
     Type: String 
     Default: "theFirmu"
