@@ -16,8 +16,8 @@ Parameters:
     Type: String
     Default: "https://adminportal.thefirmu.org"
   Environment:
-    Type: String 
-    Default: "dev"
+    Type: String
+    Default: "prod"
   ConfigurationSet:
     Type: String 
     Default: "theFirmu"
@@ -32,7 +32,7 @@ Resources:
   LambdaForCloudFormation:
     Type: 'AWS::IAM::Role'
     Properties:
-      RoleName: !Join ['',['LambdaForCloudFormation-', !Ref Environment]]
+      RoleName: LambdaForCloudFormation
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -92,7 +92,7 @@ Resources:
   CloudFormationSendResponse:
     Type: 'AWS::Lambda::Function'
     Properties:
-      FunctionName: !Join ['',['CloudFormationSendResponse-', !Ref Environment]]
+      FunctionName: CloudFormationSendResponse
       Runtime: nodejs8.10
       Code: ./CloudFormationSendResponse
       Handler: index.handler
@@ -100,7 +100,7 @@ Resources:
   CloudFormationCognitoUserPoolClientSettings:
     Type: 'AWS::Lambda::Function'
     Properties:
-      FunctionName: !Join ['',['CloudFormationCognitoUserPoolClientSettings-', !Ref Environment]]
+      FunctionName: CloudFormationCognitoUserPoolClientSettings
       Runtime: nodejs8.10
       Code: ./CloudFormationCognitoUserPoolClientSettings.js
       Handler: CloudFormationCognitoUserPoolClientSettings.handler
@@ -109,7 +109,7 @@ Resources:
   CloudFormationCognitoUserPoolDomain:
     Type: 'AWS::Lambda::Function'
     Properties:
-      FunctionName: !Join ['',['CloudFormationCognitoUserPoolDomain-', !Ref Environment]]
+      FunctionName: CloudFormationCognitoUserPoolDomain
       Runtime: nodejs8.10
       Code: ./CloudFormationCognitoUserPoolDomain.js
       Handler: CloudFormationCognitoUserPoolDomain.handler
@@ -148,8 +148,7 @@ Resources:
           Mutable: True
           Name: email
           Required: True
-      UserPoolName: !Join ['',["thefirmu-admin-", !Ref Environment]]
-      #UserPoolName: "thefirmu-admin"
+      UserPoolName: "thefirmu-admin"
   theFirmuAdminCognitoClientSettings:
     Type: 'Custom::CognitoUserPoolClientSettings'
     DependsOn: theFirmuAdminCognitoClient
@@ -184,8 +183,20 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
-      TableName: !Join ['',["thefirmu_user_info-", !Ref Environment]]
-      #TableName: "thefirmu_user_info"
+      TableName: "thefirmu_user_info-prod"
+  theFirmuDynamoDBTableDev:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: "username"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "username"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      TableName: "thefirmu_user_info-dev"
   coachesDynamoDBTable:
     Type: "AWS::DynamoDB::Table"
     Properties:
@@ -198,8 +209,20 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
-      TableName: !Join ['',["coaches-", !Ref Environment]]
-      #TableName: "coaches"
+      TableName: "coaches-prod"
+  coachesDynamoDBTableDev:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: "email"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "email"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      TableName: "coaches-dev"
   theFirmuAdminCognitoClient:
     Type: AWS::Cognito::UserPoolClient
     Properties: 
@@ -236,15 +259,27 @@ Resources:
   dynamoDBTableNameSSM:
     Type: AWS::SSM::Parameter
     Properties: 
-      Name: !Join ['',['/a2c/', !Ref Environment, '/table_name']]
+      Name: '/a2c/prod/table_name'
       Type: String
       Value: !Ref theFirmuDynamoDBTable
+  dynamoDBTableNameDevSSM:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: '/a2c/dev/table_name'
+      Type: String
+      Value: !Ref theFirmuDynamoDBTableDev
   coachesTableNameSSM:
     Type: AWS::SSM::Parameter
     Properties: 
-      Name: !Join ['',['/a2c/', !Ref Environment, '/coaches_table_name']]
+      Name: '/a2c/prod/coaches_table_name'
       Type: String
       Value: !Ref coachesDynamoDBTable
+  coachesTableNameDevSSM:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: '/a2c/dev/coaches_table_name'
+      Type: String
+      Value: !Ref coachesDynamoDBTableDev
   sesConfigurationSetSSM:
     Type: AWS::SSM::Parameter
     Properties: 
@@ -267,7 +302,12 @@ Resources:
                 "dynamodb:Query",
                 "dynamodb:UpdateItem"
           ]
-          Resource: [ !GetAtt [theFirmuDynamoDBTable,'Arn'], !GetAtt coachesDynamoDBTable.Arn ]
+          Resource: [ 
+            !GetAtt theFirmuDynamoDBTable.Arn,
+            !GetAtt coachesDynamoDBTable.Arn,
+            !GetAtt theFirmuDynamoDBTableDev.Arn,
+            !GetAtt coachesDynamoDBTableDev.Arn
+          ]
       Roles:
         - !Ref "mgmtPortalRole"
   mgmtPortalSESPolicy:
@@ -391,8 +431,7 @@ Resources:
     Properties: 
       Comment: DNS record for ALB
       HostedZoneName: thefirmu.org.
-      Name: !Join ['',['adminportal-',!Ref Environment, '.thefirmu.org']]
-      #Name: 'adminportal.thefirmu.org'
+      Name: 'adminportal.thefirmu.org'
       ResourceRecords: 
         - !GetAtt LoadBalancer.DNSName
       TTL: 300
