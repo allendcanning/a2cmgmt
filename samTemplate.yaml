@@ -17,7 +17,7 @@ Parameters:
     Default: "https://adminportal.thefirmu.org"
   Environment:
     Type: String 
-    Default: "dev"
+    Default: "prod"
   ConfigurationSet:
     Type: String 
     Default: "theFirmu"
@@ -184,8 +184,8 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
-      #TableName: !Join ['',["thefirmu_user_info-", !Ref Environment]]
-      TableName: "thefirmu_user_info"
+      TableName: !Join ['',["thefirmu_user_info-", !Ref Environment]]
+      #TableName: "thefirmu_user_info"
   coachesDynamoDBTable:
     Type: "AWS::DynamoDB::Table"
     Properties:
@@ -198,8 +198,8 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
-      #TableName: !Join ['',["coaches-", !Ref Environment]]
-      TableName: "coaches"
+      TableName: !Join ['',["coaches-", !Ref Environment]]
+      #TableName: "coaches"
   theFirmuAdminCognitoClient:
     Type: AWS::Cognito::UserPoolClient
     Properties: 
@@ -305,7 +305,7 @@ Resources:
   mgmtPortalRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: a2c-mgmt-role
+      RoleName: !Join ['',['a2c-mgmt', !Ref Environment, '-role']]
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
       AssumeRolePolicyDocument:
@@ -321,6 +321,9 @@ Resources:
       Handler: mgmt_handler.mgmt_handler
       CodeUri: ./mgmt/
       Role: !GetAtt ["mgmtPortalRole","Arn"]
+      Environment:
+        Variables:
+          ENVIRONMENT: !Ref Environment
   LoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
@@ -388,8 +391,8 @@ Resources:
     Properties: 
       Comment: DNS record for ALB
       HostedZoneName: thefirmu.org.
-      #Name: !Join [''['adminportal-',!Ref Environment, '.thefirmu.org']]
-      Name: 'adminportal.thefirmu.org'
+      Name: !Join [''['adminportal-',!Ref Environment, '.thefirmu.org']]
+      #Name: 'adminportal.thefirmu.org'
       ResourceRecords: 
         - !GetAtt LoadBalancer.DNSName
       TTL: 300

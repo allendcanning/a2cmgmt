@@ -16,6 +16,9 @@ from urllib.request import urlopen
 os.environ['TZ'] = 'US/Eastern'
 time.tzset()
 
+# Get Environment
+environment = os.environ['ENVIRONMENT']
+
 # Open DB connection
 dynamodb = boto3.resource('dynamodb')
 
@@ -117,6 +120,10 @@ def print_add_user_form():
   content += '<form method="post" action="/">'
   content += 'Enter Username: <input type="text" name="username"><p>\n'
   content += 'Enter Email Address: <input type="email" name="email"><p>\n'
+  content += 'Select Environment: <select name="environment">\n'
+  content += '<option value="dev">Development</option>\n'
+  content += '<option value="prod">Production</option>\n'
+  content += '</select>\n'
   content += '<input type="hidden" name="action" value="add">\n'
   content += '<input type="submit" name="Submit">'
   content += '</form>'
@@ -542,7 +549,6 @@ def getTokenFromOauthCode(config,code,redirect_uri):
 def mgmt_handler(event, context):
   token = False
   action = "False"
-  environment = "dev"
   user_record = {}
 
   log_error("Event = "+json.dumps(event))
