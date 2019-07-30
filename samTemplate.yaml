@@ -32,7 +32,7 @@ Resources:
   LambdaForCloudFormation:
     Type: 'AWS::IAM::Role'
     Properties:
-      RoleName: LambdaForCloudFormation
+      RoleName: !Join ['',['LambdaForCloudFormation-', !Ref Environment]]
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -92,7 +92,7 @@ Resources:
   CloudFormationSendResponse:
     Type: 'AWS::Lambda::Function'
     Properties:
-      FunctionName: CloudFormationSendResponse
+      FunctionName: !Join ['',['CloudFormationSendResponse-', !Ref Environment]]
       Runtime: nodejs8.10
       Code: ./CloudFormationSendResponse
       Handler: index.handler
@@ -100,7 +100,7 @@ Resources:
   CloudFormationCognitoUserPoolClientSettings:
     Type: 'AWS::Lambda::Function'
     Properties:
-      FunctionName: CloudFormationCognitoUserPoolClientSettings
+      FunctionName: !Join ['',['CloudFormationCognitoUserPoolClientSettings-', !Ref Environment]]
       Runtime: nodejs8.10
       Code: ./CloudFormationCognitoUserPoolClientSettings.js
       Handler: CloudFormationCognitoUserPoolClientSettings.handler
@@ -109,7 +109,7 @@ Resources:
   CloudFormationCognitoUserPoolDomain:
     Type: 'AWS::Lambda::Function'
     Properties:
-      FunctionName: CloudFormationCognitoUserPoolDomain
+      FunctionName: !Join ['',['CloudFormationCognitoUserPoolDomain-', !Ref Environment]]
       Runtime: nodejs8.10
       Code: ./CloudFormationCognitoUserPoolDomain.js
       Handler: CloudFormationCognitoUserPoolDomain.handler
@@ -148,8 +148,8 @@ Resources:
           Mutable: True
           Name: email
           Required: True
-      #UserPoolName: !Join ['',["thefirmu-admin-", !Ref Environment]]
-      UserPoolName: "thefirmu-admin"
+      UserPoolName: !Join ['',["thefirmu-admin-", !Ref Environment]]
+      #UserPoolName: "thefirmu-admin"
   theFirmuAdminCognitoClientSettings:
     Type: 'Custom::CognitoUserPoolClientSettings'
     DependsOn: theFirmuAdminCognitoClient
