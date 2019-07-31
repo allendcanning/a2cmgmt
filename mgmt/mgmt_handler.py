@@ -52,10 +52,6 @@ def get_config_data():
     response = client.get_parameter(Name=ssmpath,WithDecryption=False)
     config[environment]['table_name'] =response['Parameter']['Value'] 
 
-    ssmpath="/a2c/"+environment+"/admin_content_url"
-    response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-    config[environment]['content_url'] =response['Parameter']['Value'] 
-
     ssmpath="/a2c/"+environment+"/admin_cognito_pool"
     response = client.get_parameter(Name=ssmpath,WithDecryption=False)
     config[environment]['admin_cognito_pool'] =response['Parameter']['Value'] 
