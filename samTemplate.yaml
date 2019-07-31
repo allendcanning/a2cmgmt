@@ -298,6 +298,12 @@ Resources:
       Name: !Join ['',['/a2c/', !Ref Environment, '/ses_configuration_set']]
       Type: String
       Value: !Ref ConfigurationSet
+  sesConfigurationSetDevSSM:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: '/a2c/dev/ses_configuration_set'
+      Type: String
+      Value: !Ref ConfigurationSet
   mgmtPortalDynamoPolicy:
     Type: AWS::IAM::Policy
     Properties:
