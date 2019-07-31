@@ -33,51 +33,51 @@ def get_config_data():
   for environment in environments:
     ssmpath="/a2c/"+environment+"/s3_html_bucket"
     response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-    config['environment']['s3_html_bucket'] = response['Parameter']['Value']
+    config[environment]['s3_html_bucket'] = response['Parameter']['Value']
   
     ssmpath="/a2c/"+environment+"/cognito_pool"
     response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-    config['environment']['cognito_pool'] =response['Parameter']['Value'] 
+    config[environment]['cognito_pool'] =response['Parameter']['Value'] 
 
     ssmpath="/a2c/"+environment+"/mgmt_cognito_client_id"
     response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-    config['environment']['cognito_client_id'] =response['Parameter']['Value'] 
+    config[environment]['cognito_client_id'] =response['Parameter']['Value'] 
 
     ssmpath="/a2c/"+environment+"/mgmt_cognito_client_secret_hash"
     response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-    config['environment']['cognito_client_secret_hash'] =response['Parameter']['Value'] 
+    config[environment]['cognito_client_secret_hash'] =response['Parameter']['Value'] 
 
     ssmpath="/a2c/"+environment+"/table_name"
     response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-    config['environment']['table_name'] =response['Parameter']['Value'] 
+    config[environment]['table_name'] =response['Parameter']['Value'] 
 
     ssmpath="/a2c/"+environment+"/admin_content_url"
     response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-    config['environment']['content_url'] =response['Parameter']['Value'] 
+    config[environment]['content_url'] =response['Parameter']['Value'] 
 
     ssmpath="/a2c/"+environment+"/admin_cognito_pool"
     response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-    config['environment']['admin_cognito_pool'] =response['Parameter']['Value'] 
+    config[environment]['admin_cognito_pool'] =response['Parameter']['Value'] 
 
     ssmpath="/a2c/"+environment+"/admin_cognito_client_id"
     response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-    config['environment']['admin_cognito_client_id'] =response['Parameter']['Value'] 
+    config[environment]['admin_cognito_client_id'] =response['Parameter']['Value'] 
 
     ssmpath="/a2c/"+environment+"/admin_cognito_client_secret_hash"
     response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-    config['environment']['admin_cognito_client_secret_hash'] =response['Parameter']['Value'] 
+    config[environment]['admin_cognito_client_secret_hash'] =response['Parameter']['Value'] 
 
     ssmpath="/a2c/"+environment+"/admin_cognito_auth_url"
     response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-    config['environment']['cognito_auth_url'] =response['Parameter']['Value'] 
+    config[environment]['cognito_auth_url'] =response['Parameter']['Value'] 
 
     ssmpath="/a2c/"+environment+"/coaches_table_name"
     response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-    config['environment']['coaches_table_name'] =response['Parameter']['Value'] 
+    config[environment]['coaches_table_name'] =response['Parameter']['Value'] 
   
     ssmpath="/a2c/"+environment+"/ses_configuration_set"
     response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-    config['environment']['ses_configuration_set'] =response['Parameter']['Value'] 
+    config[environment]['ses_configuration_set'] =response['Parameter']['Value'] 
 
   for env in config:
     for item in config[env]:
