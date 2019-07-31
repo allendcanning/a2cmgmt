@@ -25,67 +25,70 @@ dynamodb = boto3.resource('dynamodb')
 def log_error(msg):
   print(msg)
 
-def get_config_data(environment):
+def get_config_data():
   client = boto3.client('ssm')
+  environments = [ 'dev', 'prod']
   config = {}
 
-  ssmpath="/a2c/"+environment+"/s3_html_bucket"
-  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-  config['s3_html_bucket'] = response['Parameter']['Value']
+  for environment in environments:
+    ssmpath="/a2c/"+environment+"/s3_html_bucket"
+    response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+    config['environment']['s3_html_bucket'] = response['Parameter']['Value']
   
-  ssmpath="/a2c/"+environment+"/cognito_pool"
-  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-  config['cognito_pool'] =response['Parameter']['Value'] 
+    ssmpath="/a2c/"+environment+"/cognito_pool"
+    response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+    config['environment']['cognito_pool'] =response['Parameter']['Value'] 
 
-  ssmpath="/a2c/"+environment+"/mgmt_cognito_client_id"
-  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-  config['cognito_client_id'] =response['Parameter']['Value'] 
+    ssmpath="/a2c/"+environment+"/mgmt_cognito_client_id"
+    response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+    config['environment']['cognito_client_id'] =response['Parameter']['Value'] 
 
-  ssmpath="/a2c/"+environment+"/mgmt_cognito_client_secret_hash"
-  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-  config['cognito_client_secret_hash'] =response['Parameter']['Value'] 
+    ssmpath="/a2c/"+environment+"/mgmt_cognito_client_secret_hash"
+    response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+    config['environment']['cognito_client_secret_hash'] =response['Parameter']['Value'] 
 
-  ssmpath="/a2c/"+environment+"/table_name"
-  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-  config['table_name'] =response['Parameter']['Value'] 
+    ssmpath="/a2c/"+environment+"/table_name"
+    response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+    config['environment']['table_name'] =response['Parameter']['Value'] 
 
-  ssmpath="/a2c/"+environment+"/admin_content_url"
-  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-  config['content_url'] =response['Parameter']['Value'] 
+    ssmpath="/a2c/"+environment+"/admin_content_url"
+    response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+    config['environment']['content_url'] =response['Parameter']['Value'] 
 
-  ssmpath="/a2c/"+environment+"/admin_cognito_pool"
-  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-  config['admin_cognito_pool'] =response['Parameter']['Value'] 
+    ssmpath="/a2c/"+environment+"/admin_cognito_pool"
+    response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+    config['environment']['admin_cognito_pool'] =response['Parameter']['Value'] 
 
-  ssmpath="/a2c/"+environment+"/admin_cognito_client_id"
-  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-  config['admin_cognito_client_id'] =response['Parameter']['Value'] 
+    ssmpath="/a2c/"+environment+"/admin_cognito_client_id"
+    response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+    config['environment']['admin_cognito_client_id'] =response['Parameter']['Value'] 
 
-  ssmpath="/a2c/"+environment+"/admin_cognito_client_secret_hash"
-  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-  config['admin_cognito_client_secret_hash'] =response['Parameter']['Value'] 
+    ssmpath="/a2c/"+environment+"/admin_cognito_client_secret_hash"
+    response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+    config['environment']['admin_cognito_client_secret_hash'] =response['Parameter']['Value'] 
 
-  ssmpath="/a2c/"+environment+"/admin_cognito_auth_url"
-  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-  config['cognito_auth_url'] =response['Parameter']['Value'] 
+    ssmpath="/a2c/"+environment+"/admin_cognito_auth_url"
+    response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+    config['environment']['cognito_auth_url'] =response['Parameter']['Value'] 
 
-  ssmpath="/a2c/"+environment+"/coaches_table_name"
-  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-  config['coaches_table_name'] =response['Parameter']['Value'] 
+    ssmpath="/a2c/"+environment+"/coaches_table_name"
+    response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+    config['environment']['coaches_table_name'] =response['Parameter']['Value'] 
   
-  ssmpath="/a2c/"+environment+"/ses_configuration_set"
-  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-  config['ses_configuration_set'] =response['Parameter']['Value'] 
+    ssmpath="/a2c/"+environment+"/ses_configuration_set"
+    response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+    config['environment']['ses_configuration_set'] =response['Parameter']['Value'] 
 
-  for item in config:
-    log_error("Got config key = "+item+" value = "+config[item])
+  for env in config:
+    for item in config[env]:
+      log_error("For Env ["+env+"] Got config key = "+item+" value = "+config[item])
 
   return config
 
 def start_html(config):
   # Build HTML content
-  css = '<link rel="stylesheet" href="https://s3.amazonaws.com/'+config['s3_html_bucket']+'/admin/css/a2c.css" type="text/css" />'
-  js = '<script src="https://s3.amazonaws.com/'+config['s3_html_bucket']+'/admin/javascript/thefirmu.js"></script>'
+  css = '<link rel="stylesheet" href="https://s3.amazonaws.com/'+config[environment]['s3_html_bucket']+'/admin/css/a2c.css" type="text/css" />'
+  js = '<script src="https://s3.amazonaws.com/'+config[environment]['s3_html_bucket']+'/admin/javascript/thefirmu.js"></script>'
   content = "<html><head><title>A2C Portal</title>\n"
   content += css+'\n'
   content += js+'\n'
@@ -120,6 +123,10 @@ def print_add_user_form():
   content += '<form method="post" action="/">'
   content += 'Enter Username: <input type="text" name="username"><p>\n'
   content += 'Enter Email Address: <input type="email" name="email"><p>\n'
+  content += '<select name="environment">\n'
+  content += '<option value="dev">Development</option>\n'
+  content += '<option value="prod">Production</option>\n'
+  content += '</select>\n'
   content += '<input type="hidden" name="action" value="add">\n'
   content += '<input type="submit" name="Submit">'
   content += '</form>'
@@ -139,7 +146,7 @@ def get_coaches(config):
   return coaches
 
 def get_coach(config,coach):
-  t = dynamodb.Table(config['coaches_table_name'])
+  t = dynamodb.Table(config[environment]['coaches_table_name'])
 
   log_error("Key = "+coach)
 
@@ -154,7 +161,7 @@ def get_coach(config,coach):
     return False
 
 def get_athlete(config,athlete):
-  t = dynamodb.Table(config['table_name'])
+  t = dynamodb.Table(config[environment]['table_name'])
 
   # Get coaches list from Dynamo, need to add filtering to scan
   athlete_record = t.get_item(Key={ 'username': athlete })
@@ -167,7 +174,7 @@ def get_athlete(config,athlete):
     return False
 
 def get_athletes(config):
-  t = dynamodb.Table(config['table_name'])
+  t = dynamodb.Table(config[environment]['table_name'])
   athletes = {}
 
   # Get coaches list from Dynamo, need to add filtering to scan
@@ -286,7 +293,7 @@ def send_email_template(config,record):
       template_data['school'] = coach['school']
 
       try:
-        response = client.send_templated_email(Source=source, Destination=dest, ReplyToAddresses=replyto,Template=template,ConfigurationSetName=config['ses_configuration_set'],TemplateData=json.dumps(template_data))
+        response = client.send_templated_email(Source=source, Destination=dest, ReplyToAddresses=replyto,Template=template,ConfigurationSetName=config[environment]['ses_configuration_set'],TemplateData=json.dumps(template_data))
         retval['status'] = True
         retval['message'] = "Successfully sent email"
       except ClientError as e:
@@ -372,12 +379,13 @@ def print_email_templates(config,name):
 def add_cognito_user(config,record):
   cognito = boto3.client('cognito-idp')
   retval = {}
+  environment = record['environment']
 
   log_error('Inside add cognito')
   # Create cognito pool user
   try:
     response = cognito.admin_create_user(
-      UserPoolId=config['cognito_pool'],
+      UserPoolId=config[environment]['cognito_pool'],
       Username=record['username'],
       UserAttributes=[
         {
@@ -405,7 +413,7 @@ def rm_cognito_user(config,record):
   # Create cognito pool user
   try:
     response = cognito.admin_delete_user(
-      UserPoolId=config['cognito_pool'],
+      UserPoolId=config[environment]['cognito_pool'],
       Username=record['username']
     )
     retval['status'] = True
@@ -421,7 +429,7 @@ def rm_cognito_user(config,record):
 
 def add_dynamo_user(config,record):
   # Make connection to DB table
-  t = dynamodb.Table(config['table_name'])
+  t = dynamodb.Table(config[environment]['table_name'])
 
   retval = {}
 
@@ -451,7 +459,7 @@ def add_dynamo_user(config,record):
 def validate_token(config,token):
   region = 'us-east-1'
   user_record = {}
-  keys_url = 'https://cognito-idp.{}.amazonaws.com/{}/.well-known/jwks.json'.format(region, config['admin_cognito_pool'])
+  keys_url = 'https://cognito-idp.{}.amazonaws.com/{}/.well-known/jwks.json'.format(region, config[environment]['admin_cognito_pool'])
   response = urlopen(keys_url)
   keys = json.loads(response.read())['keys']
   user_record['token'] = 'False'
@@ -494,7 +502,7 @@ def validate_token(config,token):
       log_error('Token is expired')
       return user_record
 
-  if claims['client_id'] != config['admin_cognito_client_id']:
+  if claims['client_id'] != config[environment]['admin_cognito_client_id']:
       log_error('Token claims not valid for this application')
       return user_record
   
@@ -529,14 +537,14 @@ def check_token(config,event):
   return auth_record
 
 def getTokenFromOauthCode(config,code,redirect_uri):
-  auth_header = base64.b64encode(bytes(config['admin_cognito_client_id']+':'+config['admin_cognito_client_secret_hash'],'UTF-8'))
+  auth_header = base64.b64encode(bytes(config[environment]['admin_cognito_client_id']+':'+config[environment]['admin_cognito_client_secret_hash'],'UTF-8'))
   data = {
     "grant_type": "authorization_code",
     "code": code,
-    "client_id": config['admin_cognito_client_id'],
+    "client_id": config[environment]['admin_cognito_client_id'],
     "redirect_uri": redirect_uri
   }
-  r = requests.post(config['cognito_auth_url']+'token',auth=auth_header,data=data)
+  r = requests.post(config[environment]['cognito_auth_url']+'token',auth=auth_header,data=data)
 
   res = r.json()
 
@@ -549,7 +557,7 @@ def mgmt_handler(event, context):
 
   log_error("Event = "+json.dumps(event))
 
-  config = get_config_data(environment)
+  config = get_config_data()
 
   # Check for token
   auth_record = check_token(config,event)
@@ -564,7 +572,7 @@ def mgmt_handler(event, context):
           log_error("Token = ",token)
         else:
           # Redirect to oauth login form
-          url = config['cognito_auth_url']+"authorize?response_type=code&client_id="+config['admin_cognito_client_id']+"&redirect_uri="+config['content_url']
+          url = config[environment]['cognito_auth_url']+"authorize?response_type=code&client_id="+config[environment]['admin_cognito_client_id']+"&redirect_uri="+config[environment]['content_url']
           log_error("Sending to "+url)
 
           return { 'statusCode': 301,
