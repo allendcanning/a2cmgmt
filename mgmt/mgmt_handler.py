@@ -78,7 +78,7 @@ def get_config_data():
 
   for env in config:
     for item in config[env]:
-      log_error("For Env ["+env+"] Got config key = "+item+" value = "+config[item])
+      log_error("For Env ["+env+"] Got config key = "+item+" value = "+config[env][item])
 
   return config
 
