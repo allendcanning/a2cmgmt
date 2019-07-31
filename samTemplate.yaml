@@ -238,10 +238,22 @@ Resources:
       Name: !Join ['',['/a2c/', !Ref Environment, '/admin_cognito_pool']]
       Type: String
       Value: !Ref theFirmuAdminCognitoPool
+  cognitoAdminPoolDevSSM:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: '/a2c/dev/admin_cognito_pool'
+      Type: String
+      Value: !Ref theFirmuAdminCognitoPool
   cognitoAdminClientIdSSM:
     Type: AWS::SSM::Parameter
     Properties: 
       Name: !Join ['',['/a2c/', !Ref Environment, '/admin_cognito_client_id']]
+      Type: String
+      Value: !Ref theFirmuAdminCognitoClient
+  cognitoAdminClientIdDevSSM:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: '/a2c/dev/admin_cognito_client_id'
       Type: String
       Value: !Ref theFirmuAdminCognitoClient
   cognitoAdminAuthUrlSSM:
@@ -250,12 +262,12 @@ Resources:
       Name: !Join ['',['/a2c/', !Ref Environment, '/admin_cognito_auth_url']]
       Type: String
       Value: !Join ['',['https://',!Ref AdminCognitoDomain,'.auth.us-east-1.amazoncognito.com/oath2/']]
-  cognitoAdminContentUrlSSM:
+  cognitoAdminAuthUrlDevSSM:
     Type: AWS::SSM::Parameter
     Properties:
-      Name: !Join ['',['/a2c/', !Ref Environment, '/admin_content_url']]
+      Name: '/a2c/dev/admin_cognito_auth_url'
       Type: String
-      Value: !Join ['',[!Ref AdminContentUrl,'/']]
+      Value: !Join ['',['https://',!Ref AdminCognitoDomain,'.auth.us-east-1.amazoncognito.com/oath2/']]
   dynamoDBTableNameSSM:
     Type: AWS::SSM::Parameter
     Properties: 
