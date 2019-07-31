@@ -31,6 +31,7 @@ def get_config_data():
   config = {}
 
   for environment in environments:
+    config[environment] = {}
     ssmpath="/a2c/"+environment+"/s3_html_bucket"
     response = client.get_parameter(Name=ssmpath,WithDecryption=False)
     config[environment]['s3_html_bucket'] = response['Parameter']['Value']
