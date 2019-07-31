@@ -109,6 +109,10 @@ def print_rm_user_form():
   content = '<h3>The Firm U Remove a User page</h3>\n'
   content += '<form method="post" action="/">'
   content += 'Enter Username: <input type="text" name="username"><p>\n'
+  content += 'Choose Environment: <select name="environment">\n'
+  content += '<option value="prod">Production</option>\n'
+  content += '<option value="dev">Development</option>\n'
+  content += '</select><p>\n'
   content += '<input type="hidden" name="action" value="rm">\n'
   content += '<input type="submit" name="Submit">'
   content += '</form>'
@@ -120,9 +124,9 @@ def print_add_user_form():
   content += '<form method="post" action="/">'
   content += 'Enter Username: <input type="text" name="username"><p>\n'
   content += 'Enter Email Address: <input type="email" name="email"><p>\n'
-  content += '<select name="environment">\n'
-  content += '<option value="dev">Development</option>\n'
+  content += 'Choose Environment: <select name="environment">\n'
   content += '<option value="prod">Production</option>\n'
+  content += '<option value="dev">Development</option>\n'
   content += '</select><p>\n'
   content += '<input type="hidden" name="action" value="add">\n'
   content += '<input type="submit" name="Submit">'
@@ -131,7 +135,7 @@ def print_add_user_form():
   return content
 
 def get_coaches(config):
-  t = dynamodb.Table(config['coaches_table_name'])
+  t = dynamodb.Table(config[environment]['coaches_table_name'])
 
   # Get coaches list from Dynamo, need to add filtering to scan
   items = t.scan()
