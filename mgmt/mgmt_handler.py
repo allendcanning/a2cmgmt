@@ -123,7 +123,7 @@ def print_add_user_form():
   content += '<select name="environment">\n'
   content += '<option value="dev">Development</option>\n'
   content += '<option value="prod">Production</option>\n'
-  content += '</select>\n'
+  content += '</select><p>\n'
   content += '<input type="hidden" name="action" value="add">\n'
   content += '<input type="submit" name="Submit">'
   content += '</form>'
@@ -378,7 +378,6 @@ def add_cognito_user(config,record):
   retval = {}
   environment = record['environment']
 
-  log_error('Inside add cognito')
   # Create cognito pool user
   try:
     response = cognito.admin_create_user(
@@ -405,9 +404,9 @@ def add_cognito_user(config,record):
 def rm_cognito_user(config,record):
   cognito = boto3.client('cognito-idp')
   retval = {}
+  environment = record['environment']
 
-  log_error('Inside add cognito')
-  # Create cognito pool user
+  # Remove cognito pool user
   try:
     response = cognito.admin_delete_user(
       UserPoolId=config[environment]['cognito_pool'],
@@ -426,9 +425,16 @@ def rm_cognito_user(config,record):
 
 def add_dynamo_user(config,record):
   # Make connection to DB table
+  if 'environment' in record:
+    environment = record['environment']
+
   t = dynamodb.Table(config[environment]['table_name'])
 
   retval = {}
+
+  # Delete environment item
+  if 'environment' in record:
+    del record['environment']
 
   # Delete the action item
   if 'action' in record:
