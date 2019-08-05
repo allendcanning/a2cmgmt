@@ -232,6 +232,12 @@ Resources:
       GenerateSecret: True
       RefreshTokenValidity: 30
       UserPoolId: !Ref theFirmuAdminCognitoPool
+  adminContentURLSSM:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: !Join ['',['/a2c/', !Ref Environment, '/admin_content_url']]
+      Type: String
+      Value: !Ref AdminContentUrl
   cognitoAdminPoolSSM:
     Type: AWS::SSM::Parameter
     Properties: 

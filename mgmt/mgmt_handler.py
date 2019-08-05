@@ -68,6 +68,10 @@ def get_config_data():
     response = client.get_parameter(Name=ssmpath,WithDecryption=False)
     config[environment]['cognito_auth_url'] =response['Parameter']['Value'] 
 
+    ssmpath="/a2c/"+environment+"/admin_content_url"
+    response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+    config[environment]['admin_content_url'] =response['Parameter']['Value'] 
+
     ssmpath="/a2c/"+environment+"/coaches_table_name"
     response = client.get_parameter(Name=ssmpath,WithDecryption=False)
     config[environment]['coaches_table_name'] =response['Parameter']['Value'] 
@@ -579,7 +583,7 @@ def mgmt_handler(event, context):
           log_error("Token = ",token)
         else:
           # Redirect to oauth login form
-          url = config[environment]['cognito_auth_url']+"authorize?response_type=code&client_id="+config[environment]['admin_cognito_client_id']+"&redirect_uri="+config[environment]['content_url']
+          url = config[environment]['cognito_auth_url']+"authorize?response_type=code&client_id="+config[environment]['admin_cognito_client_id']+"&redirect_uri="+config[environment]['admin_content_url']
           log_error("Sending to "+url)
 
           return { 'statusCode': 301,

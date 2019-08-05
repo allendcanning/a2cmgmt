@@ -15,16 +15,8 @@
         "accept-language": "en-US,en;q=0.9",
         "cache-control": "max-age=0",
         "host": "devportal.thefirmu.org",
-        "referer": "https://thefirmu.auth.us-east-1.amazoncognito.com/login?client_id=613jtfac8uoqk0b0827eak5med&redirect_uri=https%3A%2F%2Fdevportal.thefirmu.org%2Foauth2%2Fidpresponse&response_type=code&scope=openid&state=AXYatjJT%2F%2BGzSFyqs%2Bs%2FNanSo7QkP9lWm9omnBeaCfUr4If%2BHa2u%2B3XV5ndJ0rhm3oY66iveB7SXtvoebbCFMWg%2BDQcPJ6Z5OJzlMJOkXdn1FrnHWmoHC2cq%2B%2FXa7UDc4VGMvXSB%2BjJ9MWZN1hkleB9fzQXtg8KHCPDkt%2FNpYg5kdW%2BqLXnr%2BDRnMQ3C3TSsBIe6a8g4%2BJc%3D",
-        "upgrade-insecure-requests": "1",
-        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36",
         "x-amzn-oidc-accesstoken": "eyJraWQiOiI0RWZJQkc3UFVPM0ZqYlh5NE0zRU9kUFByRlJqSkZUTnBOQnZLOVhDZXZvPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJiZDk0YmIwMC0wODExLTQ2MDktODI2ZC1iYWQxNzFjMDc5MzkiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6Im9wZW5pZCIsImF1dGhfdGltZSI6MTU2Mjc2NjIwOSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfRGpPMzVrdkNvIiwiZXhwIjoxNTYyOTUzMDAxLCJpYXQiOjE1NjI5NDk0MDEsInZlcnNpb24iOjIsImp0aSI6ImFlYjlhZDk0LTRiOGUtNDI1Zi04NjA1LWI2ZTk4MWZhMjljMCIsImNsaWVudF9pZCI6IjNvMGQxdHNkOThmbnJidnN0YjdqNGthNGJ1IiwidXNlcm5hbWUiOiJjYW5uaW5nIn0.fdpIIYuLNkmviul8Nuhi2CsGM2hWzbjA8ZnMz9WtTkgzmHSx77aqFZGuS1cdMDxjdk_-v5T3_qPEMZWs2h-4bi4IvW7YiXxOqoyY78vktBt5RH5nDTwP26huHhWOwV5PnSv2kb6PBmadxq0gG1yJR6m8xnicDi8w0yXPu7CUsMM-iW2cMeTbbZf9YKh35HObycfvH6-876yfp48Rz3YWFV24lNjr0hu7c8rkCl1cJgvs1xk0M3YF73myDK2R9ZIDom2ILZWQQwlU9w3g-dkUFYStIANtb9inwwEUxzsh_3NJ4tdh-aDKdVD8Qxt4PZOqifBlkU1klTTcSBUa5-w9GA",
         "x-amzn-oidc-data": "eyJ0eXAiOiJKV1QiLCJraWQiOiIyN2Y4Y2IwOS04ZTNhLTQxYTUtYmI3ZC1lYjhjMWU5ZGI5OTYiLCJhbGciOiJFUzI1NiIsImlzcyI6Imh0dHBzOi8vY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb20vdXMtZWFzdC0xX0RqTzM1a3ZDbyIsImNsaWVudCI6IjNvMGQxdHNkOThmbnJidnN0YjdqNGthNGJ1Iiwic2lnbmVyIjoiYXJuOmF3czplbGFzdGljbG9hZGJhbGFuY2luZzp1cy1lYXN0LTE6NTMwMzE3NzcxMTYxOmxvYWRiYWxhbmNlci9hcHAvYTJjLW0tTG9hZEItMUQwN0VHVTRPVTJONC82NjVmYWJiZjJhNWIzZDNhIiwiZXhwIjoxNTYyOTQ5NTI3fQ==.eyJzdWIiOiJiZDk0YmIwMC0wODExLTQ2MDktODI2ZC1iYWQxNzFjMDc5MzkiLCJlbWFpbF92ZXJpZmllZCI6InRydWUiLCJwaG9uZV9udW1iZXJfdmVyaWZpZWQiOiJ0cnVlIiwicGhvbmVfbnVtYmVyIjoiKzE1MDg5ODI2ODQ0IiwiZW1haWwiOiJjYW5uaW5nQGNhbm5pbmdicmFuY2guY29tIiwidXNlcm5hbWUiOiJjYW5uaW5nIiwiZXhwIjoxNTYyOTQ5NTI3LCJpc3MiOiJodHRwczovL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tL3VzLWVhc3QtMV9Eak8zNWt2Q28ifQ==.eOhUjW16mMG0NTOdfbircSCqRZJTQoXf3FWCMf56w5LI6Xq-Zsz4Y2jaSZu-xHQam1dHK6OtGTVOpMzvPmlYig==",
-        "x-amzn-oidc-identity": "bd94bb00-0811-4609-826d-bad171c07939",
-        "x-amzn-trace-id": "Root=1-5d24ac2f-67a89943ca5f18e12ff8af81",
-        "x-forwarded-for": "10.0.0.1",
-        "x-forwarded-port": "443",
-        "x-forwarded-proto": "https"
     },
     "body": "",
     "isBase64Encoded": true

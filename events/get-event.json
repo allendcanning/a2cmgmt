@@ -1,0 +1,19 @@
+{
+    "requestContext": {
+        "elb": {
+            "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:530317771161:targetgroup/a2c-s-Targe-1GJ96K1I6ISOG/b002feeae0c81b88"
+        }
+    },
+    "httpMethod": "GET",
+    "path": "/",
+    "queryStringParameters": "",
+    "headers": {
+        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+        "accept-encoding": "gzip, deflate, br",
+        "accept-language": "en-US,en;q=0.9",
+        "cache-control": "max-age=0",
+        "host": "devportal.thefirmu.org"
+    },
+    "body": "",
+    "isBase64Encoded": true
+}
