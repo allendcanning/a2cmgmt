@@ -80,8 +80,8 @@ def authenticate_user(session,config,environment,authparams):
   # Get cognito handle
   cognito = session.client('cognito-idp')
 
-  message = authparams['USERNAME'] + config[environment]['cognito_client_id']
-  dig = hmac.new(key=bytes(config[environment]['cognito_client_secret_hash'],'UTF-8'),msg=message.encode('UTF-8'),digestmod=hashlib.sha256).digest()
+  message = authparams['USERNAME'] + config[environment]['admin_cognito_client_id']
+  dig = hmac.new(key=bytes(config[environment]['admin_cognito_client_secret_hash'],'UTF-8'),msg=message.encode('UTF-8'),digestmod=hashlib.sha256).digest()
 
   authparams['SECRET_HASH'] = base64.b64encode(dig).decode()
 
@@ -89,8 +89,8 @@ def authenticate_user(session,config,environment,authparams):
 
   # Initiate Authentication
   try:
-    response = cognito.admin_initiate_auth(UserPoolId=config[environment]['cognito_pool'],
-                                 ClientId=config[environment]['cognito_client_id'],
+    response = cognito.admin_initiate_auth(UserPoolId=config[environment]['admin_cognito_pool'],
+                                 ClientId=config[environment]['admin_cognito_client_id'],
                                  AuthFlow='ADMIN_NO_SRP_AUTH',
                                  AuthParameters=authparams)
     log_error(json.dumps(response))
@@ -104,7 +104,7 @@ def authenticate_user(session,config,environment,authparams):
 running_locally = True
 function_name = "mgmtPortalFunction"
 authparams = {}
-authparams['USERNAME'] = "acanning"
+authparams['USERNAME'] = "canning"
 authparams['PASSWORD'] = "Hunter98!"
 
 # Begin of main section
