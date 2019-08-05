@@ -238,6 +238,12 @@ Resources:
       Name: !Join ['',['/a2c/', !Ref Environment, '/admin_content_url']]
       Type: String
       Value: !Ref AdminContentUrl
+  adminContentURLDevSSM:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: '/a2c/dev/admin_content_url'
+      Type: String
+      Value: !Ref AdminContentUrl
   cognitoAdminPoolSSM:
     Type: AWS::SSM::Parameter
     Properties: 
