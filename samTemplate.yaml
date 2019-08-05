@@ -163,9 +163,9 @@ Resources:
       AllowedOAuthFlowsUserPoolClient: true
       AllowedOAuthFlows:
         - code
+        - implicit
       AllowedOAuthScopes:
         - openid
-      ExplicitAuthFlows: "ADMIN_NO_SRP_AUTH"
   theFirmuAdminDomain:
     Type: 'Custom::CognitoUserPoolDomain'
     Properties:
