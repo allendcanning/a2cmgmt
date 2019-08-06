@@ -517,7 +517,10 @@ def validate_token(config,token):
       log_error('Token claims not valid for this application')
       return user_record
   
-  user_record['username'] = claims['cognito:username']
+  if 'cognito:username' in claims:
+    user_record['username'] = claims['cognito:username']
+  elif 'username' in claims:
+    user_record['username'] = claims['username']
   user_record['token'] = token
 
   return user_record
