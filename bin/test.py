@@ -1,5 +1,6 @@
 #!/usr/local/bin/python3 
 
+import os
 from optparse import OptionParser
 import boto3
 import botocore
@@ -70,9 +71,9 @@ def get_config_data(session):
     response = client.get_parameter(Name=ssmpath,WithDecryption=False)
     config[environment]['ses_configuration_set'] =response['Parameter']['Value'] 
 
-  for env in config:
-    for item in config[env]:
-      log_error("For Env ["+env+"] Got config key = "+item+" value = "+config[env][item])
+#  for env in config:
+#    for item in config[env]:
+#      log_error("For Env ["+env+"] Got config key = "+item+" value = "+config[env][item])
 
   return config
 
@@ -85,7 +86,7 @@ def authenticate_user(session,config,environment,authparams):
 
   authparams['SECRET_HASH'] = base64.b64encode(dig).decode()
 
-  log_error('Auth record = '+json.dumps(authparams))
+  #log_error('Auth record = '+json.dumps(authparams))
 
   # Initiate Authentication
   try:
@@ -93,7 +94,7 @@ def authenticate_user(session,config,environment,authparams):
                                  ClientId=config[environment]['admin_cognito_client_id'],
                                  AuthFlow='ADMIN_NO_SRP_AUTH',
                                  AuthParameters=authparams)
-    log_error(json.dumps(response))
+    #log_error(json.dumps(response))
   except ClientError as e:
     log_error('Admin Initiate Auth failed: '+e.response['Error']['Message'])
     return 'False'
@@ -104,6 +105,7 @@ def authenticate_user(session,config,environment,authparams):
 running_locally = True
 function_name = "mgmtPortalFunction"
 authparams = {}
+eventlocation = os.getcwd()+"/events"
 authparams['USERNAME'] = "canning"
 authparams['PASSWORD'] = "Hunter98!"
 
@@ -142,9 +144,7 @@ base_event = {
     },
     "httpMethod": "GET",
     "path": "/",
-    "queryStringParameters": {
-       "action": "email_coaches"
-    },
+    "queryStringParameters": "",
     "headers": {
         "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
         "host": "adminportal.thefirmu.org",
@@ -180,12 +180,30 @@ response = lambda_client.invoke(
 # Verify the response
 print("Syntax...")
 if 'StatusCode' in response:
-  if response['StatusCode'] > 200 and response['StatusCode'] < 300:
+  if response['StatusCode'] >= 200 and response['StatusCode'] < 300:
     print("ok")
   else:
     log_error(response['StatusCode'])
-    log_error(response['FunctionError'])
+    if 'FunctionError' in response:
+      log_error(response['FunctionError'])
 
 # check GET responses
+for file in os.listdir(eventlocation):
+    if file.startswith("get"):
+      with open(eventlocation+"/"+file) as event_file:
+        print("Testing event "+file)
+        event = json.load(event_file)
+        event['headers']['x-amzn-oidc-accesstoken'] = token
+        response = lambda_client.invoke(
+          FunctionName=function_name,
+          Payload=bytes(json.dumps(event),'UTF-8')
+        )
+        if 'StatusCode' in response:
+           if response['StatusCode'] >= 200 and response['StatusCode'] < 300:
+             print("ok")
+           else:
+             log_error(response['StatusCode'])
+             if 'FunctionError' in response:
+               log_error(response['FunctionError']) 
 
 # check POST responses

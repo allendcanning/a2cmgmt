@@ -1,0 +1,17 @@
+{
+    "requestContext": {
+        "elb": {
+            "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:530317771161:targetgroup/a2c-s-Targe-1GJ96K1I6ISOG/b002feeae0c81b88"
+        }
+    },
+    "httpMethod": "GET",
+    "path": "/",
+    "queryStringParameters": {
+       "action": "add_tmpl"
+    },
+    "headers": {
+        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3"
+    },
+    "body": "",
+    "isBase64Encoded": "true"
+}
