@@ -513,7 +513,12 @@ def validate_token(config,token):
       log_error('Token is expired')
       return user_record
 
-  if claims['aud'] != config[environment]['admin_cognito_client_id']:
+  if 'aud' in claims:
+    if claims['aud'] != config[environment]['admin_cognito_client_id']:
+      log_error('Token claims not valid for this application')
+      return user_record
+  elif 'client_id' in claims:
+    if claims['client_id'] != config[environment]['admin_cognito_client_id']:
       log_error('Token claims not valid for this application')
       return user_record
   
