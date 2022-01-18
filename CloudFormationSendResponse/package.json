@@ -1,0 +1,10 @@
+{
+  "name": "CloudFormationSendResponse",
+  "version": "1.0.1",
+  "description": "CloudFormationSendResponse",
+  "main": "index.js",
+  "dependencies": {
+    "axios": ">=0.21.2",
+    "follow-redirects": ">=1.14.7"
+  }
+}
