@@ -5,6 +5,6 @@
   "main": "index.js",
   "dependencies": {
     "axios": ">=0.21.2",
-    "follow-redirects": ">=1.14.7"
+    "follow-redirects": ">=1.14.8"
   }
 }
